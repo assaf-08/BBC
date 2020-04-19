@@ -11,7 +11,7 @@ import java.util.List;
 
 public class BBCCommClient {
     private int id;
-    private final HashMap<String,BBCCommBlockingStub> blockingStubs;
+    private final HashMap<String, BBCCommBlockingStub> blockingStubs;
 
     public BBCCommClient(int id, List<String> hosts, int port) {
         this.id = id;
@@ -19,16 +19,16 @@ public class BBCCommClient {
         blockingStubs = new HashMap<>();
         for (String host : hosts) {
             Channel channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
-            blockingStubs.put(host,BBCCommGrpc.newBlockingStub(channel));
+            blockingStubs.put(host, BBCCommGrpc.newBlockingStub(channel));
         }
     }
 
     public void sendMSG(String reciever, String msgStr) {
         MSG msg = MSG.newBuilder().setContent(msgStr).setNodeId(this.id).build();
 
-        try{
+        try {
             Response returnCode = blockingStubs.get(reciever).sendMSG(msg);
-        } catch (StatusRuntimeException e){
+        } catch (StatusRuntimeException e) {
             assert (false);
 
         }
