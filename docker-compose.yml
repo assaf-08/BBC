@@ -1,0 +1,11 @@
+version: '3'
+services:
+  node0:
+    build: .
+    environment:
+      - node_id=0
+
+  node1:
+    build: .
+    environment:
+      - node_id=1

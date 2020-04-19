@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.comm";
+option java_outer_classname = "BBCProto";
+option objc_class_prefix = "RTG";
+
+service BBCComm {
+rpc SendMSG(MSG) returns (Response){}
+
+
+}
+
+message MSG{
+    int32 node_id=1;
+    string content = 2;
+}
+
+message Response {
+    int32 return_status = 1;
+}

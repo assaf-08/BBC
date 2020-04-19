@@ -1,5 +1,12 @@
 plugins {
     id 'java'
+    id 'com.google.protobuf' version '0.8.8'
+    id 'idea'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+ext {
+    gRPCVersion = '1.28.1'
 }
 
 group 'org.example'
@@ -11,4 +18,31 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation "io.grpc:grpc-netty-shaded:$gRPCVersion"
+    implementation "io.grpc:grpc-protobuf:$gRPCVersion"
+    implementation "io.grpc:grpc-stub:$gRPCVersion"
+
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.11.0"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$gRPCVersion"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
 }
