@@ -19,3 +19,7 @@ message MSG{
 message Response {
     int32 return_status = 1;
 }
+
+message VRFMessage {
+    string tag = 1;
+}

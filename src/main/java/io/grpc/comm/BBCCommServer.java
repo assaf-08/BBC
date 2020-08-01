@@ -29,6 +29,10 @@ public class BBCCommServer {
         }
 
         private void addRequest(MSG request) {
+
+
+            // TODO Manor and Assaf logic.
+
             if (!messages.containsKey(request.getNodeId())) {
                 messages.put(request.getNodeId(), Collections.synchronizedList(new ArrayList<>()));
             }
