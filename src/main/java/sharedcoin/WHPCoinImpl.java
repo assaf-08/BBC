@@ -22,7 +22,7 @@ public class WHPCoinImpl implements SharedCoinContract {
     }
 
     @Override
-    public boolean sharedCoin(int r) {
+    public int sharedCoin(int r) {
         Set<Integer> firstSet = new HashSet<>();
         Set<Integer> secondtSet = new HashSet<>();
         VRFResult currentVrfResult = null;
@@ -69,14 +69,14 @@ public class WHPCoinImpl implements SharedCoinContract {
                 secondtSet.add(coinMessage.getSenderID());
                 if (secondtSet.size() == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
                     BigInteger currentVrfOutput = new BigInteger(currentVrfResult.getVRFOutput(), BBCConfig.VRF_STRING_OUTPUT_BASE);
-                    return currentVrfOutput.testBit(0); // TODO check if the this is the LSB
+                    return currentVrfOutput.testBit(0) ? 1 : 0; // TODO check if the this is the LSB
 
                 }
 
             } else {
                 // TODO throw exception.
                 assert false;
-                return false;
+                return 0;
             }
 
         }

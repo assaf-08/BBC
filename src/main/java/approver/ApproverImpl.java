@@ -37,6 +37,7 @@ public class ApproverImpl implements ApproverContract {
             assert approverMsg.getValue() < 2 && approverMsg.getValue() >= 0;
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)) {
+                // TODO validate sender is in Committee ?
                 numberOReceivedINIT[approverMsg.getValue()]++;
 
                 if (numberOReceivedINIT[approverMsg.getValue()] == BBCConfig.getNumberOfMaxByzantineNodes() + 1) {
@@ -49,6 +50,7 @@ public class ApproverImpl implements ApproverContract {
             }
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)) {
+                // TODO validate sender is in Committee ?
                 numberOReceivedECHO[approverMsg.getValue()]++;
 
                 if (numberOReceivedECHO[approverMsg.getValue()] == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
@@ -62,6 +64,7 @@ public class ApproverImpl implements ApproverContract {
             }
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)) {
+                // TODO validate sender is in Committee ?
                 numberOReceivedOK[approverMsg.getValue()]++;
                 retSet.add(approverMsg.getValue());
                 if (numberOReceivedOK[approverMsg.getValue()] == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {

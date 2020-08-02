@@ -2,6 +2,6 @@ package sharedcoin;
 
 public interface SharedCoinContract {
 
-    boolean sharedCoin(int r);
+    int sharedCoin(int r);
 
 }

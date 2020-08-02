@@ -2,6 +2,8 @@ package bbc;
 
 public class BBCConfig {
 
+    public static final int NUMBER_OF_ROUNDS = 100;
+
     public static final int VRF_STRING_OUTPUT_BASE = 10;
     public static final int SAMPLE_COMMITTEE_THRESHOLD = 1;
 
