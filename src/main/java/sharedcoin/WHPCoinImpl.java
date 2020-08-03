@@ -14,11 +14,13 @@ import java.util.Set;
 
 public class WHPCoinImpl implements SharedCoinContract {
     private final SamplerContract sampler;
-    private VRFContract vrf;
-    private BBCCommContract communicator;
+    private final VRFContract vrf;
+    private final BBCCommContract communicator;
 
-    public WHPCoinImpl(SamplerContract sampler) {
+    public WHPCoinImpl(SamplerContract sampler, VRFContract vrf, BBCCommContract communicator) {
         this.sampler = sampler;
+        this.vrf = vrf;
+        this.communicator = communicator;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class WHPCoinImpl implements SharedCoinContract {
             communicator.broadcastCoinMsg(SharedCoinConfig.COIN_FIRST_TAG, currentVrfResult);
         }
         while (true) {
-            CoinMessage coinMessage = communicator.popCoinMsg();
+            CoinMessage coinMessage = communicator.popCoinMsg(); // TODO maybe pop coin should be per round
             if (!isVrfResultValid(coinMessage, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, r)) {
                 continue;
             }

@@ -4,8 +4,8 @@ import sampler.types.SampleResult;
 
 public interface SamplerContract {
 
-    public SampleResult sample(String tag, int threshold);
+    SampleResult sample(String tag, int threshold);
 
-    public boolean committeeValidate(String tag,int threshold,int nodeID,String proof);
+    boolean committeeValidate(String tag, int threshold, int nodeID, String proof);
 
 }
