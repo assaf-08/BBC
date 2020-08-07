@@ -5,10 +5,10 @@ import sharedcoin.SharedCoinContract;
 
 import java.util.Set;
 
+import static bbc.BBCConfig.EMPTY_VALUE;
+
 public class BBCImpl implements BBCContract {
 
-
-    private final int EMPTY_VALUE = -1;
 
     private final ApproverContract approver;
     private final SharedCoinContract sharedCoin;
@@ -22,7 +22,7 @@ public class BBCImpl implements BBCContract {
     public int propose(int v) {
         int estimate = v;
         int decision = EMPTY_VALUE;
-        Integer propose = EMPTY_VALUE;
+        Integer propose;
         for (int r = 0; r < BBCConfig.NUMBER_OF_ROUNDS; r++) {
             Set<Integer> vals = approver.approve(estimate);
             if (vals.size() == 1) {

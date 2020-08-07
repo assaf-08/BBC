@@ -21,18 +21,19 @@ public class ApproverImpl implements ApproverContract {
 
     @Override
     public Set<Integer> approve(Integer v) {
+        // TODO: check with Royi if we should support EMPTY_VALUE. The article confuses.
         HashSet<Integer> retSet = new HashSet<>();
-        int[] numberOReceivedINIT = new int[2];
-        int[] numberOReceivedECHO = new int[2];
-        int[] numberOReceivedOK = new int[2];
+        int[] numberOReceivedINIT = new int[3];
+        int[] numberOReceivedECHO = new int[3];
+        int[] numberOReceivedOK = new int[3];
         boolean sentOkMsg = false;
         SampleResult sampleResult = sampler.sample(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
         if (sampleResult.getResult()) {
-            communicator.broadcastApproveMsg(BBCConfig.ApproverTags.INIT, nodeID);
+            communicator.broadcastApproveMsg(BBCConfig.ApproverTags.INIT, v);
         }
         while (true) {
             ApproverMsg approverMsg = communicator.popApproverMsg();
-            assert approverMsg.getValue() < 2 && approverMsg.getValue() >= 0;
+            assert approverMsg.getValue() <= 2 && approverMsg.getValue() >= 0;
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)) {
                 // TODO validate sender is in Committee ?
