@@ -11,11 +11,12 @@ public interface BBCCommContract {
 
     void broadcastApproveMsg(String tag, Integer value);
 
-    // TODO: per round f
-    void broadcastCoinMsg(String tag, VRFResult vrfResult);
+    void broadcastCoinMsg(int round,String tag, VRFResult vrfResult);
 
     CoinMessage popCoinMsg();
 
     ApproverMsg popApproverMsg();
+
+//    void addNodeToBroadcastList() // TODO
 
 }

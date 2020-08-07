@@ -31,7 +31,7 @@ public class WHPCoinImpl implements SharedCoinContract {
         SampleResult sampleResult = sampler.sample(SharedCoinConfig.COIN_FIRST_TAG, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
         if (sampleResult.getResult()) {
             currentVrfResult = vrf.calculate(r);
-            communicator.broadcastCoinMsg(SharedCoinConfig.COIN_FIRST_TAG, currentVrfResult);
+            communicator.broadcastCoinMsg(r,SharedCoinConfig.COIN_FIRST_TAG, currentVrfResult);
         }
         while (true) {
             CoinMessage coinMessage = communicator.popCoinMsg(); // TODO maybe pop coin should be per round
@@ -55,7 +55,7 @@ public class WHPCoinImpl implements SharedCoinContract {
                     }
                     firstSet.add(coinMessage.getSenderID());
                     if (firstSet.size() == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
-                        communicator.broadcastCoinMsg(SharedCoinConfig.COIN_SECOND_TAG, currentVrfResult);
+                        communicator.broadcastCoinMsg(r,SharedCoinConfig.COIN_SECOND_TAG, currentVrfResult);
                     }
 
                 }

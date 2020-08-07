@@ -26,13 +26,13 @@ public class BBCImpl implements BBCContract {
         for (int r = 0; r < BBCConfig.NUMBER_OF_ROUNDS; r++) {
             Set<Integer> vals = approver.approve(estimate);
             if (vals.size() == 1) {
-                propose = vals.toArray(new Integer[0])[0]; // TODO check if this is correct
+                propose = vals.toArray(new Integer[0])[0];
             } else {
                 propose = EMPTY_VALUE;
             }
 
             int c = sharedCoin.sharedCoin(r);
-            Set<Integer> proposals = approver.approve(propose); // TODO make sure approver can accept -1.
+            Set<Integer> proposals = approver.approve(propose); // TODO make sure approver can accept EMPTY_VALUE.
             if (proposals.size() == 1) {
                 Integer proposalsOnlyElement = proposals.toArray(new Integer[0])[0];
                 if (proposalsOnlyElement != EMPTY_VALUE) {
