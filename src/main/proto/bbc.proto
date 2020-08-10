@@ -6,20 +6,53 @@ option java_outer_classname = "BBCProto";
 option objc_class_prefix = "RTG";
 
 service BBCComm {
-rpc SendMSG(MSG) returns (Response){}
+
+    rpc sendCoinMsg (CoinMsg) returns (Response) {
+    }
+    rpc SendApproveMsg (ApproveMsg) returns (Response) {
+    }
 
 
-}
-
-message MSG{
-    int32 node_id=1;
-    string content = 2;
 }
 
 message Response {
     int32 return_status = 1;
 }
 
-message VRFMessage {
-    string tag = 1;
+// REAL TODO delete
+
+message Meta {
+    int32 channel = 1;
+    int32 cid = 2;
+    int32 cidSeries = 3;
+}
+
+message MsgHeader {
+    int32 sender_id = 1;
+    Meta meta = 2;
+    int32 round = 3;
+
+
+}
+
+message CommitteeData {
+    string proof = 1;
+}
+
+message VRFMsg {
+    string vrfOutput = 1;
+    string vrfProof = 2;
+}
+
+message CoinMsg {
+    MsgHeader header = 1;
+    string tag = 2;
+    VRFMsg vrfResult = 3;
+    CommitteeData committeeData = 4;
+}
+
+message ApproveMsg {
+    MsgHeader header = 1;
+    string tag = 2;
+    int32 value = 3;
 }

@@ -7,6 +7,14 @@ public class CoinMessage {
     private String committeeProof;
     private int round;
 
+    public CoinMessage(String tag, VRFResult vrfResult, int senderID, String committeeProof, int round) {
+        this.tag = tag;
+        this.vrfResult = vrfResult;
+        this.senderID = senderID;
+        this.committeeProof = committeeProof;
+        this.round = round;
+    }
+
     public int getRound() {
         return round;
     }

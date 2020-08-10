@@ -1,22 +1,25 @@
 package io.grpc.comm;
 
 import approver.ApproverMsg;
-import bbc.BBCContract;
 import vrf.types.CoinMessage;
 import vrf.types.VRFResult;
+import bbc.MetaData;
+
+import java.io.IOException;
 
 public interface BBCCommContract {
 
-    // TODO add session ID for all API
 
-    void broadcastApproveMsg(String tag, Integer value);
+    void broadcastApproveMsg(int round, String tag, Integer value, MetaData meta);
 
-    void broadcastCoinMsg(int round,String tag, VRFResult vrfResult);
+    void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta);
 
-    CoinMessage popCoinMsg();
+    CoinMessage popCoinMsg(int round, MetaData meta);
 
-    ApproverMsg popApproverMsg();
+    ApproverMsg popApproverMsg(int round, MetaData meta);
 
-//    void addNodeToBroadcastList() // TODO
+    void addNodeToBroadcastList(String host, int port);
+
+    void startServer() throws IOException;
 
 }

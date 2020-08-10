@@ -1,6 +1,7 @@
 package sharedcoin;
 
 import bbc.BBCConfig;
+import bbc.MetaData;
 import io.grpc.comm.BBCCommContract;
 import sampler.SamplerContract;
 import sampler.types.SampleResult;
@@ -24,17 +25,17 @@ public class WHPCoinImpl implements SharedCoinContract {
     }
 
     @Override
-    public int sharedCoin(int r) {
+    public int sharedCoin(int r, MetaData meta) {
         Set<Integer> firstSet = new HashSet<>();
         Set<Integer> secondtSet = new HashSet<>();
         VRFResult currentVrfResult = null;
         SampleResult sampleResult = sampler.sample(SharedCoinConfig.COIN_FIRST_TAG, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
         if (sampleResult.getResult()) {
             currentVrfResult = vrf.calculate(r);
-            communicator.broadcastCoinMsg(r,SharedCoinConfig.COIN_FIRST_TAG, currentVrfResult);
+            communicator.broadcastCoinMsg(r, SharedCoinConfig.COIN_FIRST_TAG, currentVrfResult, meta);
         }
         while (true) {
-            CoinMessage coinMessage = communicator.popCoinMsg(); // TODO maybe pop coin should be per round
+            CoinMessage coinMessage = communicator.popCoinMsg(r, meta);
             if (!isVrfResultValid(coinMessage, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, r)) {
                 continue;
             }
@@ -55,7 +56,7 @@ public class WHPCoinImpl implements SharedCoinContract {
                     }
                     firstSet.add(coinMessage.getSenderID());
                     if (firstSet.size() == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
-                        communicator.broadcastCoinMsg(r,SharedCoinConfig.COIN_SECOND_TAG, currentVrfResult);
+                        communicator.broadcastCoinMsg(r, SharedCoinConfig.COIN_SECOND_TAG, currentVrfResult, meta);
                     }
 
                 }
@@ -87,6 +88,8 @@ public class WHPCoinImpl implements SharedCoinContract {
     }
 
     private boolean isVrfResultValid(CoinMessage coinMsg, int threshold, int r) {
+        assert coinMsg != null;
+        assert sampler != null;
         boolean isSenderInCommittee = sampler.committeeValidate(coinMsg.getTag(), threshold, coinMsg.getSenderID(), coinMsg.getCommitteeProof());
         if (!isSenderInCommittee) {
             return false;

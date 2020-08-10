@@ -19,20 +19,20 @@ public class BBCImpl implements BBCContract {
     }
 
     @Override
-    public int propose(int v) {
+    public int propose(int v, MetaData meta) {
         int estimate = v;
         int decision = EMPTY_VALUE;
         Integer propose;
         for (int r = 0; r < BBCConfig.NUMBER_OF_ROUNDS; r++) {
-            Set<Integer> vals = approver.approve(estimate);
+            Set<Integer> vals = approver.approve(estimate, r, meta);
             if (vals.size() == 1) {
                 propose = vals.toArray(new Integer[0])[0];
             } else {
                 propose = EMPTY_VALUE;
             }
 
-            int c = sharedCoin.sharedCoin(r);
-            Set<Integer> proposals = approver.approve(propose); // TODO make sure approver can accept EMPTY_VALUE.
+            int c = sharedCoin.sharedCoin(r, meta);
+            Set<Integer> proposals = approver.approve(propose, r, meta); // TODO make sure approver can accept EMPTY_VALUE.
             if (proposals.size() == 1) {
                 Integer proposalsOnlyElement = proposals.toArray(new Integer[0])[0];
                 if (proposalsOnlyElement != EMPTY_VALUE) {
