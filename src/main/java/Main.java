@@ -12,13 +12,14 @@ import vrf.DummyVRFImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        runCoin();
-//        runApprover();
+//        runCoin();
+        runApprover();
 //        Map<String, String> env = System.getenv();
 //        assert (env.containsKey("node_id"));
 //        String idStr = env.get("node_id");
@@ -101,7 +102,7 @@ public class Main {
             e.printStackTrace();
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
-        approver.approve(0,0, TestUtils.createDummyMeta());
-
+        HashSet<Integer> approveResult= (HashSet<Integer>) approver.approve(0,0, TestUtils.createDummyMeta());
+        System.out.println(approveResult.toString());
     }
 }

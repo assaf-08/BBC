@@ -58,14 +58,19 @@ public class BBCCommServer {
 
         }
 
-        CoinMsg rawMsg = roundQueue.poll();
+        CoinMsg rawMsg = null;
+        try {
+            rawMsg = roundQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         VRFResult vrfResult = new VRFResult(rawMsg.getVrfResult().getVrfOutput(), rawMsg.getVrfResult().getVrfOutput());
         LOGGER.log(Level.INFO,"End Pop coin");
         return new CoinMessage(rawMsg.getTag(), vrfResult, rawMsg.getHeader().getSenderId(), rawMsg.getCommitteeData().getProof(), rawMsg.getHeader().getRound());
 
     }
 
-    public ApproverMsg popApproveMsg(MetaData meta, int r) {
+    public ApproverMsg popApproveMsg(MetaData meta, int r){
         HashMap<Integer, BlockingQueue<ApproveMsg>> sessionMap;
         BlockingQueue<ApproveMsg> roundQueue;
         synchronized (approveMsgs) {
@@ -87,7 +92,12 @@ public class BBCCommServer {
             roundQueue = sessionMap.get(r);
 
         }
-        ApproveMsg rawMsg = roundQueue.poll();
+        ApproveMsg rawMsg = null;
+        try {
+            rawMsg = roundQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return new ApproverMsg(rawMsg.getTag(), rawMsg.getValue());
     }
