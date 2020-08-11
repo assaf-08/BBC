@@ -1,9 +1,13 @@
 package io.grpc.comm.communicationlayer;
 
 import approver.ApproverMsg;
+import bbc.MetaData;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import io.grpc.comm.*;
+import io.grpc.comm.ApproveMsg;
+import io.grpc.comm.BBCCommGrpc;
+import io.grpc.comm.CoinMsg;
+import io.grpc.comm.Response;
 import io.grpc.stub.StreamObserver;
 import vrf.types.CoinMessage;
 import vrf.types.VRFResult;
@@ -11,13 +15,9 @@ import vrf.types.VRFResult;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import bbc.MetaData;
 
 public class BBCCommServer {
 

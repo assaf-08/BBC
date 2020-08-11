@@ -39,10 +39,7 @@ public class WHPCoinImpl implements SharedCoinContract {
             if (!isVrfResultValid(coinMessage, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, r)) {
                 continue;
             }
-            if (coinMessage.getRound() < r) {
-                // TODO: check if the is a correct behaviour
-                continue;
-            }
+
             if (coinMessage.getTag().equals(SharedCoinConfig.COIN_FIRST_TAG)) {
 
                 SampleResult secondSampleResult = sampler.sample(SharedCoinConfig.COIN_SECOND_TAG, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
