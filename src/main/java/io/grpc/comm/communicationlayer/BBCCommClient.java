@@ -9,10 +9,14 @@ import vrf.types.VRFResult;
 import bbc.MetaData;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BBCCommClient {
     private final int id;
     private final HashMap<String, BBCCommBlockingStub> blockingStubs;
+
+    private final static Logger LOGGER = Logger.getLogger(BBCCommServer.class.getName());
 
     public BBCCommClient(int id) {
         this.id = id;
@@ -27,9 +31,11 @@ public class BBCCommClient {
 
 
     public void broadcastApproveMsg(int round, String tag, Integer value, MetaData meta) {
+        LOGGER.log(Level.INFO, "Broadcasting approve message Round: " + round + " Tag: " + tag);
         ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).build();
-        blockingStubs.forEach((node_id, stub) -> {
+        blockingStubs.forEach((node_addr, stub) -> {
                     try {
+                        LOGGER.info("Broadcasting to: "+node_addr);
                         Response returnCode = stub.sendApproveMsg(approveMsg);
                     } catch (StatusRuntimeException e) {
                         assert (false);
@@ -40,6 +46,7 @@ public class BBCCommClient {
 
 
     public void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta) {
+        LOGGER.log(Level.INFO, "Broadcasting coin message Round: " + String.valueOf(round) + " Tag: " + String.valueOf(tag));
         VRFMsg vrfMsg = VRFMsg.newBuilder().setVrfOutput(vrfResult.getVRFOutput()).setVrfProof(vrfResult.getVRFProof()).build();
         CoinMsg coinMsg = CoinMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setVrfResult(vrfMsg).build();
         blockingStubs.forEach((node_id, stub) -> {
@@ -55,7 +62,7 @@ public class BBCCommClient {
 
     private MsgHeader createMsgHeader(MetaData meta, int round) {
         Meta rawMeta = Meta.newBuilder().setChannel(meta.getChannel()).setCid(meta.getCid()).setCidSeries(meta.getCidSeries()).build();
-        MsgHeader msgHeader = MsgHeader.newBuilder().setSenderId(this.id).setMeta(rawMeta).build();
+        MsgHeader msgHeader = MsgHeader.newBuilder().setSenderId(this.id).setMeta(rawMeta).setRound(round).build();
         return msgHeader;
     }
 }

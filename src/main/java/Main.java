@@ -1,5 +1,8 @@
 import approver.ApproverContract;
 import approver.ApproverImpl;
+import bbc.BBCConfig;
+import bbc.BBCContract;
+import bbc.BBCImpl;
 import io.grpc.comm.BBCCommContract;
 import io.grpc.comm.BBCCommImpl;
 import io.grpc.comm.communicationlayer.BBCCommClient;
@@ -18,8 +21,11 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("D = " + String.valueOf(BBCConfig.D));
+        System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()) + " LAMBDA = " + String.valueOf(BBCConfig.SAMPLE_COMMITTEE_THRESHOLD));
 //        runCoin();
-        runApprover();
+//        runApprover();
+        runPropose();
 //        Map<String, String> env = System.getenv();
 //        assert (env.containsKey("node_id"));
 //        String idStr = env.get("node_id");
@@ -66,6 +72,9 @@ public class Main {
     private static void runCoin() {
 
         Integer nodeID = TestUtils.getNodeId(true);
+        if (nodeID >= 2) {
+            return;
+        }
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
         try {
@@ -87,6 +96,9 @@ public class Main {
 
     private static void runApprover() {
         Integer nodeID = TestUtils.getNodeId(true);
+        if (nodeID >= 2) {
+            return;
+        }
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
         try {
@@ -95,14 +107,44 @@ public class Main {
             e.printStackTrace();
             return;
         }
-        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
+//        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
-        HashSet<Integer> approveResult= (HashSet<Integer>) approver.approve(0,0, TestUtils.createDummyMeta());
+        HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, 0, TestUtils.createDummyMeta());
         System.out.println(approveResult.toString());
+    }
+
+    private static void runPropose() {
+        int[] proposals = new int[]{0, 0, 1};
+        Integer nodeID = TestUtils.getNodeId(true);
+        System.out.println("Node " + nodeID.toString() + " Has started");
+        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        try {
+            communicator.startServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
+        SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
+        BBCContract bbc = new BBCImpl(approver, coin);
+        int proposal = proposals[nodeID];
+        int result = bbc.propose(proposal, TestUtils.createDummyMeta());
+        System.out.println("BBC result: " + result);
+        assert result == 0;
     }
 }

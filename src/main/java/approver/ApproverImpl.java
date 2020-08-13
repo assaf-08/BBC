@@ -22,7 +22,6 @@ public class ApproverImpl implements ApproverContract {
 
     @Override
     public Set<Integer> approve(Integer v, Integer round, MetaData meta) {
-        // TODO: check with Royi if we should support EMPTY_VALUE. The article confuses.
         HashSet<Integer> retSet = new HashSet<>();
         int[] numberOReceivedINIT = new int[3];
         int[] numberOReceivedECHO = new int[3];

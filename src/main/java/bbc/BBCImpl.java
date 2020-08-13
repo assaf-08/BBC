@@ -4,6 +4,7 @@ import approver.ApproverContract;
 import sharedcoin.SharedCoinContract;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static bbc.BBCConfig.EMPTY_VALUE;
 
@@ -32,7 +33,7 @@ public class BBCImpl implements BBCContract {
             }
 
             int c = sharedCoin.sharedCoin(r, meta);
-            Set<Integer> proposals = approver.approve(propose, r, meta); // TODO make sure approver can accept EMPTY_VALUE.
+            Set<Integer> proposals = approver.approve(propose, r, meta);
             if (proposals.size() == 1) {
                 Integer proposalsOnlyElement = proposals.toArray(new Integer[0])[0];
                 if (proposalsOnlyElement != EMPTY_VALUE) {

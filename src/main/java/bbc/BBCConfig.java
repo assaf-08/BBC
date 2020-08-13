@@ -3,10 +3,10 @@ package bbc;
 
 public class BBCConfig {
 
-    public static final int SAMPLE_COMMITTEE_THRESHOLD = 1; // this is lambda
-    public static final double EPSILON = 1/3;
-    public static final double D = (Math.max((1.0/SAMPLE_COMMITTEE_THRESHOLD), 0.0362) + ((EPSILON/3)-(float)(1/(3*SAMPLE_COMMITTEE_THRESHOLD))))/2; // for choosing d between two values.
-    public static final int NUMBER_OF_ROUNDS = 100;
+    public static final int SAMPLE_COMMITTEE_THRESHOLD = 2; // this is lambda
+    public static final double EPSILON = 1.0 / 3.0;
+    public static final double D = (Math.max((1.0 / SAMPLE_COMMITTEE_THRESHOLD), 0.0362) + ((EPSILON / 3.0) - (float) (1.0 / (3.0 * SAMPLE_COMMITTEE_THRESHOLD)))) / 2.0; // for choosing d between two values.
+    public static final int NUMBER_OF_ROUNDS = 50;
 
     public static final int VRF_STRING_OUTPUT_BASE = 10;
 
@@ -21,13 +21,14 @@ public class BBCConfig {
 
     // This is W
     public static int getNumberOfMinCorrectNodesInCommittee() {
-        int min_correct_node = (int) Math.ceil(((2/3) + 3*D)* SAMPLE_COMMITTEE_THRESHOLD);
+        int min_correct_node = (int) Math.ceil(((2.0 / 3.0) + 3 * D) * SAMPLE_COMMITTEE_THRESHOLD);
         return min_correct_node;
     }
 
     // This is B
     public static int getNumberOfMaxByzantineNodes() {
-        int max_bizantine_node = (int) Math.floor(((1/3) - D) * SAMPLE_COMMITTEE_THRESHOLD);
+        double lambad_coefficient = 1.0 / 3.0 - D;
+        int max_bizantine_node = (int) (lambad_coefficient * SAMPLE_COMMITTEE_THRESHOLD);
         return max_bizantine_node;
     }
 
