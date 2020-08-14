@@ -10,7 +10,7 @@ ext {
     gRPCVersion = '1.28.1'
 }
 
-group 'org.example'
+group 'com.assafmanor.bbc'
 version '1.0-SNAPSHOT'
 
 repositories {
