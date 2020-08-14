@@ -3,6 +3,7 @@ plugins {
     id 'com.google.protobuf' version '0.8.9'
     id 'idea'
     id "com.github.johnrengelman.shadow" version "5.2.0"
+    id 'maven'
 }
 
 ext {
@@ -47,4 +48,3 @@ jar {
         attributes 'Main-Class': 'Main'
     }
 }
-

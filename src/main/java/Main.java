@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
+//        Logger.setLevel(Logger.INFO);
         System.out.println("D = " + String.valueOf(BBCConfig.D));
         System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()) + " LAMBDA = " + String.valueOf(BBCConfig.SAMPLE_COMMITTEE_THRESHOLD));
 //        runCoin();

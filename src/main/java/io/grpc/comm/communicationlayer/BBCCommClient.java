@@ -35,9 +35,9 @@ public class BBCCommClient {
         ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).build();
         blockingStubs.forEach((node_addr, stub) -> {
                     try {
-                        LOGGER.info("Broadcasting to: "+node_addr);
                         Response returnCode = stub.sendApproveMsg(approveMsg);
                     } catch (StatusRuntimeException e) {
+
                         assert (false);
                     }
                 }
