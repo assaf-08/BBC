@@ -29,10 +29,10 @@ public class WHPCoinImpl implements SharedCoinContract {
         Set<Integer> firstSet = new HashSet<>();
         Set<Integer> secondtSet = new HashSet<>();
         VRFResult currentVrfResult = null;
-        SampleResult sampleResult = sampler.sample(SharedCoinConfig.COIN_FIRST_TAG, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
+        SampleResult sampleResult = sampler.sample(BBCConfig.CoinTags.COIN_FIRST_TAG, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
         if (sampleResult.getResult()) {
             currentVrfResult = vrf.calculate(r);
-            communicator.broadcastCoinMsg(r, SharedCoinConfig.COIN_FIRST_TAG, currentVrfResult, meta);
+            communicator.broadcastCoinMsg(r, BBCConfig.CoinTags.COIN_FIRST_TAG, currentVrfResult, meta);
         }
         while (true) {
             CoinMessage coinMessage = communicator.popCoinMsg(r, meta);
@@ -40,9 +40,9 @@ public class WHPCoinImpl implements SharedCoinContract {
                 continue;
             }
 
-            if (coinMessage.getTag().equals(SharedCoinConfig.COIN_FIRST_TAG)) {
+            if (coinMessage.getTag().equals(BBCConfig.CoinTags.COIN_FIRST_TAG)) {
 
-                SampleResult secondSampleResult = sampler.sample(SharedCoinConfig.COIN_SECOND_TAG, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
+                SampleResult secondSampleResult = sampler.sample(BBCConfig.CoinTags.COIN_SECOND_TAG, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
                 if (secondSampleResult.getResult()) {
                     // Second committee logic
                     BigInteger Vj = new BigInteger(coinMessage.getVrfResult().getVRFOutput(), BBCConfig.VRF_STRING_OUTPUT_BASE);
@@ -53,12 +53,12 @@ public class WHPCoinImpl implements SharedCoinContract {
                     }
                     firstSet.add(coinMessage.getSenderID());
                     if (firstSet.size() == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
-                        communicator.broadcastCoinMsg(r, SharedCoinConfig.COIN_SECOND_TAG, currentVrfResult, meta);
+                        communicator.broadcastCoinMsg(r, BBCConfig.CoinTags.COIN_SECOND_TAG, currentVrfResult, meta);
                     }
 
                 }
 
-            } else if (coinMessage.getTag().equals(SharedCoinConfig.COIN_SECOND_TAG)) {
+            } else if (coinMessage.getTag().equals(BBCConfig.CoinTags.COIN_SECOND_TAG)) {
 
                 BigInteger Vj = new BigInteger(coinMessage.getVrfResult().getVRFOutput(), BBCConfig.VRF_STRING_OUTPUT_BASE);
                 BigInteger Vi = currentVrfResult != null ? new BigInteger(currentVrfResult.getVRFOutput(), BBCConfig.VRF_STRING_OUTPUT_BASE) : null;

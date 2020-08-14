@@ -13,6 +13,11 @@ public class BBCConfig {
 
     public static final int EMPTY_VALUE = 2;
 
+    public static class CoinTags{
+        public static final String COIN_FIRST_TAG = "COIN_FIRST";
+        public static final String COIN_SECOND_TAG = "COIN_SECOND";
+    }
+
     public static class ApproverTags {
         public static final String INIT = "INIT";
         public static final String ECHO = "ECHO";
