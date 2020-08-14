@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.assafmanor.bbc.io.grpc.comm";
+option java_package = "com.assafmanor.bbc.comm";
 option java_outer_classname = "BBCProto";
 option objc_class_prefix = "RTG";
 

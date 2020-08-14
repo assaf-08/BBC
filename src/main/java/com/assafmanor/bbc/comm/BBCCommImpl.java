@@ -1,8 +1,8 @@
-package com.assafmanor.bbc.io.grpc.comm;
+package com.assafmanor.bbc.comm;
 
 import com.assafmanor.bbc.approver.ApproverMsg;
-import com.assafmanor.bbc.io.grpc.comm.communicationlayer.BBCCommClient;
-import com.assafmanor.bbc.io.grpc.comm.communicationlayer.BBCCommServer;
+import com.assafmanor.bbc.comm.communicationlayer.BBCCommClient;
+import com.assafmanor.bbc.comm.communicationlayer.BBCCommServer;
 import com.assafmanor.bbc.vrf.types.CoinMessage;
 import com.assafmanor.bbc.vrf.types.VRFResult;
 import com.assafmanor.bbc.bbc.MetaData;

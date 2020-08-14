@@ -1,10 +1,9 @@
-package com.assafmanor.bbc.io.grpc.comm.communicationlayer;
+package com.assafmanor.bbc.comm.communicationlayer;
 
+import com.assafmanor.bbc.comm.*;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
-import io.grpc.comm.*;
-import io.grpc.comm.BBCCommGrpc.BBCCommBlockingStub;
 import com.assafmanor.bbc.vrf.types.VRFResult;
 import com.assafmanor.bbc.bbc.MetaData;
 
@@ -14,7 +13,7 @@ import java.util.logging.Logger;
 
 public class BBCCommClient {
     private final int id;
-    private final HashMap<String, BBCCommBlockingStub> blockingStubs;
+    private final HashMap<String, BBCCommGrpc.BBCCommBlockingStub> blockingStubs;
 
     private final static Logger LOGGER = Logger.getLogger(BBCCommServer.class.getName());
 

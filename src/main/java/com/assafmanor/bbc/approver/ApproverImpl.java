@@ -2,7 +2,7 @@ package com.assafmanor.bbc.approver;
 
 import com.assafmanor.bbc.bbc.BBCConfig;
 import com.assafmanor.bbc.bbc.MetaData;
-import com.assafmanor.bbc.io.grpc.comm.BBCCommContract;
+import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
 

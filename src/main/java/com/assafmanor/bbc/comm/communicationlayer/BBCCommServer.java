@@ -1,13 +1,13 @@
-package com.assafmanor.bbc.io.grpc.comm.communicationlayer;
+package com.assafmanor.bbc.comm.communicationlayer;
 
 import com.assafmanor.bbc.approver.ApproverMsg;
 import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.comm.ApproveMsg;
+import com.assafmanor.bbc.comm.BBCCommGrpc;
+import com.assafmanor.bbc.comm.CoinMsg;
+import com.assafmanor.bbc.comm.Response;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import io.grpc.comm.ApproveMsg;
-import io.grpc.comm.BBCCommGrpc;
-import io.grpc.comm.CoinMsg;
-import io.grpc.comm.Response;
 import io.grpc.stub.StreamObserver;
 import com.assafmanor.bbc.vrf.types.CoinMessage;
 import com.assafmanor.bbc.vrf.types.VRFResult;

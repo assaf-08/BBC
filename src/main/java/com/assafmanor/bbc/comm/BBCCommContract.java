@@ -1,4 +1,4 @@
-package com.assafmanor.bbc.io.grpc.comm;
+package com.assafmanor.bbc.comm;
 
 import com.assafmanor.bbc.approver.ApproverMsg;
 import com.assafmanor.bbc.vrf.types.CoinMessage;
