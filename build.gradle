@@ -10,7 +10,7 @@ ext {
     gRPCVersion = '1.28.1'
 }
 
-group 'com.assafmanor.bbc'
+group 'com.assafmanor.com.assafmanor.bbc.bbc'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -45,6 +45,6 @@ protobuf {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'Main'
+        attributes 'Main-Class': 'com.assafmanor.bbc.Main'
     }
 }
