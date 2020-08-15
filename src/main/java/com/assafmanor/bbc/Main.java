@@ -139,7 +139,7 @@ public class Main {
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
-        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).createBBCImpl();
+        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
         int proposal = proposals[nodeID];
         int result = bbc.propose(proposal, TestUtils.createDummyMeta());
         System.out.println("BBC result: " + result);
