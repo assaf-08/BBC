@@ -45,6 +45,6 @@ public class BBCBuilder {
     public BBCContract createBBCImpl() {
         SharedCoinContract sharedCoin=new WHPCoinImpl(sampler,vrf,communicator);
         ApproverContract approver = new ApproverImpl(sampler,communicator,nodeID);
-        return new BBCImpl(approver, sharedCoin);
+        return new BBC(approver, sharedCoin);
     }
 }

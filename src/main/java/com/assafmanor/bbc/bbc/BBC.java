@@ -7,13 +7,13 @@ import java.util.Set;
 
 import static com.assafmanor.bbc.bbc.BBCConfig.EMPTY_VALUE;
 
-public class BBCImpl implements BBCContract {
+public class BBC implements BBCContract {
 
 
     private final ApproverContract approver;
     private final SharedCoinContract sharedCoin;
 
-    public BBCImpl(ApproverContract approver, SharedCoinContract sharedCoin) {
+    public BBC(ApproverContract approver, SharedCoinContract sharedCoin) {
         this.approver = approver;
         this.sharedCoin = sharedCoin;
     }
