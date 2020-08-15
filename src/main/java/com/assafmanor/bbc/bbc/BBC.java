@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static com.assafmanor.bbc.bbc.BBCConfig.EMPTY_VALUE;
 
-public class BBC implements BBCContract {
+public class BBC {
 
 
     private final ApproverContract approver;
@@ -18,7 +18,7 @@ public class BBC implements BBCContract {
         this.sharedCoin = sharedCoin;
     }
 
-    @Override
+
     public int propose(int v, MetaData meta) {
         int estimate = v;
         int decision = EMPTY_VALUE;

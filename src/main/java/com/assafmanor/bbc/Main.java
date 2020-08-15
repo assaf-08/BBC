@@ -2,9 +2,9 @@ package com.assafmanor.bbc;
 
 import com.assafmanor.bbc.approver.ApproverContract;
 import com.assafmanor.bbc.approver.ApproverImpl;
+import com.assafmanor.bbc.bbc.BBC;
 import com.assafmanor.bbc.bbc.BBCBuilder;
 import com.assafmanor.bbc.bbc.BBCConfig;
-import com.assafmanor.bbc.bbc.BBCContract;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.comm.BBCCommImpl;
 import com.assafmanor.bbc.sampler.DummySamplerImpl;
@@ -139,7 +139,7 @@ public class Main {
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
-        BBCContract bbc = new BBCBuilder(nodeID,TestUtils.TEST_PORT).setCommunicator(communicator).createBBCImpl();
+        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).createBBCImpl();
         int proposal = proposals[nodeID];
         int result = bbc.propose(proposal, TestUtils.createDummyMeta());
         System.out.println("BBC result: " + result);
