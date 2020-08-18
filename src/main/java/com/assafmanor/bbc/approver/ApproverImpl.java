@@ -5,7 +5,6 @@ import com.assafmanor.bbc.bbc.MetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
-import com.assafmanor.bbc.sampler.DummySamplerImpl;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,10 +33,9 @@ public class ApproverImpl implements ApproverContract {
         while (true) {
             ApproverMsg approverMsg = communicator.popApproverMsg(round, meta);
             assert approverMsg.getValue() <= 2 && approverMsg.getValue() >= 0;
-            DummySamplerImpl dummySamplerImpl = new DummySamplerImpl();
             // **** Init phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&(!(dummySamplerImpl.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
 
                 numberOReceivedINIT[approverMsg.getValue()]++;
 
@@ -52,7 +50,7 @@ public class ApproverImpl implements ApproverContract {
 
             // **** Echo phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)&&(!(dummySamplerImpl.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
 
                 numberOReceivedECHO[approverMsg.getValue()]++;
 
@@ -68,7 +66,7 @@ public class ApproverImpl implements ApproverContract {
 
             // **** Ok phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&(!(dummySamplerImpl.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
 
                 numberOReceivedOK[approverMsg.getValue()]++;
                 retSet.add(approverMsg.getValue());
