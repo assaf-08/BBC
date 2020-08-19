@@ -8,7 +8,7 @@ import static java.lang.Integer.parseInt;
 
 public class DummyVRFImpl implements VRFContract {
 
-    public static String randomGenerator(String seed) {
+   private String randomGenerator(String seed) {
         int seed_int = parseInt(seed);
         Random generator = new Random(seed_int);
         int num = generator.nextInt()*(-1) ;
