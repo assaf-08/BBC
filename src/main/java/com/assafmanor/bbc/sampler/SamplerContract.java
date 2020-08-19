@@ -4,7 +4,7 @@ import com.assafmanor.bbc.sampler.types.SampleResult;
 
 public interface SamplerContract {
 
-    // TODO add round.
+    void AddRound(int round);
 
     SampleResult sample(String tag, int threshold);
 
