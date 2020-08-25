@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ public class BBCCommServer {
     public CoinMessage popCoinMsg(MetaData meta, int r) {
         HashMap<Integer, BlockingQueue<CoinMsg>> sessionMap;
         BlockingQueue<CoinMsg> roundQueue;
-        LOGGER.log(Level.FINEST, "Start pop coin");
+        LOGGER.log(Level.INFO, "Start pop coin");
         synchronized (coinMsgs) {
             while (coinMsgs.get(meta) == null) {
                 try {
@@ -65,13 +66,13 @@ public class BBCCommServer {
             e.printStackTrace();
         }
         VRFResult vrfResult = new VRFResult(rawMsg.getVrfResult().getVrfOutput(), rawMsg.getVrfResult().getVrfOutput());
-        LOGGER.log(Level.FINEST, "End Pop coin");
+        LOGGER.log(Level.INFO, "End Pop coin");
         return new CoinMessage(rawMsg.getTag(), vrfResult, rawMsg.getHeader().getSenderId(), rawMsg.getCommitteeData().getProof(), rawMsg.getHeader().getRound());
 
     }
 
     public ApproverMsg popApproveMsg(MetaData meta, int r) {
-        LOGGER.log(Level.FINEST, "Start pop approve");
+        LOGGER.log(Level.INFO, "Start pop approve");
         HashMap<Integer, BlockingQueue<ApproveMsg>> sessionMap;
         BlockingQueue<ApproveMsg> roundQueue;
         synchronized (approveMsgs) {
@@ -99,7 +100,7 @@ public class BBCCommServer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LOGGER.log(Level.FINEST, "End pop approve");
+        LOGGER.log(Level.INFO, "End pop approve");
         return new ApproverMsg(rawMsg.getTag(), rawMsg.getValue());
     }
 
@@ -136,10 +137,12 @@ public class BBCCommServer {
                 roundQueue = sessionMap.get(round);
                 roundQueue.add(request);
                 coinMsgs.notifyAll();
+                LOGGER.log(Level.INFO, "Recieved COIN message from " + request.getHeader().getSenderId() +
+                        " Round: " + request.getHeader().getRound() + " Phase: " + request.getTag()+"\nCurrent session Coin size is: "+
+                        roundQueue.size());
             }
 
-            LOGGER.log(Level.INFO, "Recieved COIN message from " + String.valueOf(request.getHeader().getSenderId()) +
-                    " Round: " + String.valueOf(request.getHeader().getRound()) + " Phase: " + request.getTag());
+
 
         }
 
@@ -160,8 +163,9 @@ public class BBCCommServer {
                 roundQueue.add(request);
                 approveMsgs.notifyAll();
             }
-            LOGGER.log(Level.INFO, "Recieved Approve message from " + String.valueOf(request.getHeader().getSenderId()) +
-                    " Round: " + String.valueOf(request.getHeader().getRound()) + " Phase: " + request.getTag());
+            LOGGER.log(Level.INFO, "Recieved Approve message from " + request.getHeader().getSenderId() +
+                    " Round: " + request.getHeader().getRound() +" Value: "+request.getValue()+ " Phase: " + request.getTag()+"\nCurrent session approve queue size is: "+
+                    roundQueue.size());
 
         }
 

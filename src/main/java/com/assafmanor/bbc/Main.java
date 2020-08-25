@@ -5,6 +5,7 @@ import com.assafmanor.bbc.approver.ApproverImpl;
 import com.assafmanor.bbc.bbc.BBC;
 import com.assafmanor.bbc.bbc.BBCBuilder;
 import com.assafmanor.bbc.bbc.BBCConfig;
+import com.assafmanor.bbc.bbc.MetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.comm.BBCCommImpl;
 import com.assafmanor.bbc.sampler.DummySamplerImpl;
@@ -23,7 +24,8 @@ public class Main {
         System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()) + " LAMBDA = " + String.valueOf(BBCConfig.SAMPLE_COMMITTEE_THRESHOLD));
 //        runCoin();
 //        runApprover();
-        runPropose();
+//        runPropose();
+        runTermiationTest();
 //        Map<String, String> env = System.getenv();
 //        assert (env.containsKey("node_id"));
 //        String idStr = env.get("node_id");
@@ -144,5 +146,35 @@ public class Main {
         int result = bbc.propose(proposal, TestUtils.createDummyMeta());
         System.out.println("BBC result: " + result);
         assert result == 0;
+    }
+
+    private static void runTermiationTest() {
+        int[] proposals = new int[]{0, 0, 1};
+        Integer nodeID = TestUtils.getNodeId(true);
+        System.out.println("Node " + nodeID.toString() + " Has started");
+        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        try {
+            communicator.startServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
+        SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
+        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
+        int proposal = proposals[nodeID];
+        for(int i=0;i<1000;i++){
+            int result = bbc.propose(proposal, new MetaData(i,i,i));
+            System.out.println("Round: "+i+" BBC result: " + result);
+        }
+
     }
 }
