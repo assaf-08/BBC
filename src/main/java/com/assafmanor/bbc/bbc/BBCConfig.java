@@ -23,6 +23,11 @@ public class BBCConfig {
         public static final String OK = "OK";
     }
 
+    public static class ApproverStage {
+        public static int FIRST_CALL = 0;
+        public static int SECOND_CALL = 1;
+    }
+
     // This is W
     public static int getNumberOfMinCorrectNodesInCommittee() {
         int min_correct_node = (int) Math.ceil(((2.0 / 3.0) + 3 * D) * SAMPLE_COMMITTEE_THRESHOLD);

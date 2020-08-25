@@ -24,7 +24,7 @@ public class BBC {
         int decision = EMPTY_VALUE;
         Integer propose;
         for (int r = 0; r < BBCConfig.NUMBER_OF_ROUNDS; r++) {
-            Set<Integer> vals = approver.approve(estimate, r, meta);
+            Set<Integer> vals = approver.approve(estimate, r, BBCConfig.ApproverStage.FIRST_CALL, meta);
             if (vals.size() == 1) {
                 propose = vals.toArray(new Integer[0])[0];
             } else {
@@ -32,7 +32,7 @@ public class BBC {
             }
 
             int c = sharedCoin.sharedCoin(r, meta);
-            Set<Integer> proposals = approver.approve(propose, r, meta);
+            Set<Integer> proposals = approver.approve(propose, r, BBCConfig.ApproverStage.SECOND_CALL, meta);
             if (proposals.size() == 1) {
                 Integer proposalsOnlyElement = proposals.toArray(new Integer[0])[0];
                 if (proposalsOnlyElement != EMPTY_VALUE) {

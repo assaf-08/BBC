@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,8 @@ public class BBCCommServer {
 
     // Meta -> Round -> CoinMsg
     private final HashMap<MetaData, HashMap<Integer, BlockingQueue<CoinMsg>>> coinMsgs = new HashMap<>();
-    private final HashMap<MetaData, HashMap<Integer, BlockingQueue<ApproveMsg>>> approveMsgs = new HashMap<>();
+    // Meta->Round->Stage->ApproveMsg
+    private final HashMap<MetaData, HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>>> approveMsgs = new HashMap<>();
 
     private final static Logger LOGGER = Logger.getLogger(BBCCommServer.class.getName());
     private final Server server;
@@ -70,10 +72,11 @@ public class BBCCommServer {
 
     }
 
-    public ApproverMsg popApproveMsg(MetaData meta, int r) {
+    public ApproverMsg popApproveMsg(MetaData meta, int r, int stage) {
         LOGGER.log(Level.FINEST, "Start pop approve");
-        HashMap<Integer, BlockingQueue<ApproveMsg>> sessionMap;
-        BlockingQueue<ApproveMsg> roundQueue;
+        HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>> sessionMap;
+        HashMap<Integer, BlockingQueue<ApproveMsg>> stageMap;
+        BlockingQueue<ApproveMsg> msgQueue;
         synchronized (approveMsgs) {
             while (approveMsgs.get(meta) == null) {
                 try {
@@ -90,12 +93,19 @@ public class BBCCommServer {
                     e.printStackTrace();
                 }
             }
-            roundQueue = sessionMap.get(r);
-
+            stageMap = sessionMap.get(r);
+            while (stageMap.get(stage) == null) {
+                try {
+                    approveMsgs.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            msgQueue = stageMap.get(stage);
         }
         ApproveMsg rawMsg = null;
         try {
-            rawMsg = roundQueue.take();
+            rawMsg = msgQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -136,32 +146,41 @@ public class BBCCommServer {
                 roundQueue = sessionMap.get(round);
                 roundQueue.add(request);
                 coinMsgs.notifyAll();
+                LOGGER.log(Level.FINEST, "Recieved COIN message from " + request.getHeader().getSenderId() +
+                        " Round: " + request.getHeader().getRound() + " Phase: " + request.getTag() + "\nCurrent session Coin size is: " +
+                        roundQueue.size());
             }
 
-            LOGGER.log(Level.INFO, "Recieved COIN message from " + String.valueOf(request.getHeader().getSenderId()) +
-                    " Round: " + String.valueOf(request.getHeader().getRound()) + " Phase: " + request.getTag());
 
         }
 
         private void addApproveMsg(ApproveMsg request) {
             MetaData meta = new MetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
             int round = request.getHeader().getRound();
-            HashMap<Integer, BlockingQueue<ApproveMsg>> sessionMap;
-            BlockingQueue<ApproveMsg> roundQueue;
+            int stage = request.getStage();
+            HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>> sessionMap;
+            HashMap<Integer, BlockingQueue<ApproveMsg>> stageMap;
+            BlockingQueue<ApproveMsg> msgQueue;
             synchronized (approveMsgs) {
                 if (!approveMsgs.containsKey(meta)) {
                     approveMsgs.put(meta, new HashMap<>());
                 }
                 sessionMap = approveMsgs.get(meta);
                 if (!sessionMap.containsKey(round)) {
-                    sessionMap.put(round, new LinkedBlockingQueue<>());
+                    sessionMap.put(round, new HashMap<>());
+
                 }
-                roundQueue = sessionMap.get(round);
-                roundQueue.add(request);
+                stageMap = sessionMap.get(round);
+                if (!stageMap.containsKey(stage)) {
+                    stageMap.put(stage, new LinkedBlockingQueue<>());
+                }
+                msgQueue = stageMap.get(stage);
+                msgQueue.add(request);
                 approveMsgs.notifyAll();
             }
-            LOGGER.log(Level.INFO, "Recieved Approve message from " + String.valueOf(request.getHeader().getSenderId()) +
-                    " Round: " + String.valueOf(request.getHeader().getRound()) + " Phase: " + request.getTag());
+            LOGGER.log(Level.FINEST, "Recieved Approve message from " + request.getHeader().getSenderId() +
+                    " Round: " + request.getHeader().getRound() + " Value: " + request.getValue() + " Phase: " + request.getTag() + "\nCurrent session approve queue size is: " +
+                    msgQueue.size());
 
         }
 
