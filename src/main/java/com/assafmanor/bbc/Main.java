@@ -23,8 +23,9 @@ public class Main {
         System.out.println("D = " + String.valueOf(BBCConfig.D));
         System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()) + " LAMBDA = " + String.valueOf(BBCConfig.SAMPLE_COMMITTEE_THRESHOLD));
 //        runCoin();
-        runCoinTermination();
+//        runCoinTermination();
 //        runApprover();
+        runApproverTermination();
 //        runPropose();
 //        runTermiationTest();
 //        Map<String, String> env = System.getenv();
@@ -91,6 +92,7 @@ public class Main {
         Integer res = coin.sharedCoin(0, TestUtils.createDummyMeta());
         System.out.println("Coin result: " + res.toString());
     }
+
     private static void runCoinTermination() {
 
         Integer nodeID = TestUtils.getNodeId(true);
@@ -109,9 +111,9 @@ public class Main {
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
 
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
-        for(int i =0;i<1000;i++) {
+        for (int i = 0; i < 1000; i++) {
             Integer res = coin.sharedCoin(i, TestUtils.createDummyMeta());
-            System.out.println("Coin result: " + res.toString()+" "+ i);
+            System.out.println("Coin result: " + res.toString() + " " + i);
         }
 
     }
@@ -144,9 +146,7 @@ public class Main {
 
     private static void runApproverTermination() {
         Integer nodeID = TestUtils.getNodeId(true);
-        if (nodeID >= 2) {
-            return;
-        }
+
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
         try {
@@ -155,19 +155,20 @@ public class Main {
             e.printStackTrace();
             return;
         }
-//        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
-        HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, 0, TestUtils.createDummyMeta());
-        System.out.println(approveResult.toString());
+        for (int i = 0; i < 1000; i++) {
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, i, TestUtils.createDummyMeta());
+            System.out.println(approveResult.toString()+" Round: "+i);
+        }
     }
-
 
 
     private static void runPropose() {
