@@ -5,6 +5,7 @@ import com.assafmanor.bbc.approver.ApproverImpl;
 import com.assafmanor.bbc.bbc.BBC;
 import com.assafmanor.bbc.bbc.BBCBuilder;
 import com.assafmanor.bbc.bbc.BBCConfig;
+import com.assafmanor.bbc.bbc.NonBlockingProposeCallback;
 import com.assafmanor.bbc.bbc.MetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.comm.BBCCommImpl;
@@ -23,6 +24,7 @@ public class Main {
 //        Logger.setLevel(Logger.INFO);
         System.out.println("D = " + String.valueOf(BBCConfig.D));
         System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()) + " LAMBDA = " + String.valueOf(BBCConfig.SAMPLE_COMMITTEE_THRESHOLD));
+
 //        runCoin();
 //        runCoinTermination();
 //        runApprover();
@@ -30,6 +32,8 @@ public class Main {
 //        runRandomApproverTermination();
 //        runPropose();
         runProposeTermination();
+//        runNonBlockingPropose();
+
 
     }
 
@@ -61,6 +65,7 @@ public class Main {
 
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+
         try {
             communicator.startServer();
         } catch (IOException e) {
@@ -209,4 +214,45 @@ public class Main {
         }
 
     }
+
+    static int nonBlockingResult = 1000;
+
+    private static void runNonBlockingPropose() {
+        int[] proposals = new int[]{0, 0, 1};
+        Integer nodeID = TestUtils.getNodeId(true);
+        System.out.println("Node " + nodeID.toString() + " Has started");
+        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        try {
+            communicator.startServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
+        SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
+        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
+        int proposal = proposals[nodeID];
+
+//         bbc.propose(proposal, TestUtils.createDummyMeta());
+        bbc.nonBlockingPropose(proposal, TestUtils.createDummyMeta(), new NonBlockingProposeCallback() {
+            @Override
+            public void onProposeDone(int bbcResult) {
+                nonBlockingResult = bbcResult;
+                System.out.println("BBC result: " + nonBlockingResult);
+
+            }
+        });
+
+
+    }
+
+
 }
