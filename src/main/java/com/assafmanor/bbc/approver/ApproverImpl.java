@@ -5,7 +5,6 @@ import com.assafmanor.bbc.bbc.MetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,11 +33,10 @@ public class ApproverImpl implements ApproverContract {
         while (true) {
             ApproverMsg approverMsg = communicator.popApproverMsg(round,stage, meta);
             assert approverMsg.getValue() <= 2 && approverMsg.getValue() >= 0;
-
             // **** Init phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)) {
-                // TODO validate sender is in Committee ?
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+
                 numberOReceivedINIT[approverMsg.getValue()]++;
 
                 if (numberOReceivedINIT[approverMsg.getValue()] == BBCConfig.getNumberOfMaxByzantineNodes() + 1) {
@@ -53,8 +51,8 @@ public class ApproverImpl implements ApproverContract {
 
             // **** Echo phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)) {
-                // TODO validate sender is in Committee ?
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+
                 numberOReceivedECHO[approverMsg.getValue()]++;
 
                 if (numberOReceivedECHO[approverMsg.getValue()] == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
@@ -70,9 +68,11 @@ public class ApproverImpl implements ApproverContract {
 
             // **** Ok phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)) {
+
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
                 // TODO validate sender is in Committee ?
                 numberOReceivedOK++;
+
                 retSet.add(approverMsg.getValue());
                 if (numberOReceivedOK == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
                     return retSet;
