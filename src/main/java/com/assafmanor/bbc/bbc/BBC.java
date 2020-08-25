@@ -59,4 +59,17 @@ public class BBC {
         }
         return decision;
     }
+
+    public void nonBlockingPropose(int v, MetaData meta,NonBlockingProposeCallback callback){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int result = propose(v,meta);
+                callback.onProposeDone(result);
+            }
+        });
+        thread.start();
+
+    }
+
 }
