@@ -35,7 +35,7 @@ public class ApproverImpl implements ApproverContract {
             assert approverMsg.getValue() <= 2 && approverMsg.getValue() >= 0;
             // **** Init phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
 
                 numberOReceivedINIT[approverMsg.getValue()]++;
 
@@ -51,7 +51,7 @@ public class ApproverImpl implements ApproverContract {
 
             // **** Echo phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)&&((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
 
                 numberOReceivedECHO[approverMsg.getValue()]++;
 
@@ -69,7 +69,7 @@ public class ApproverImpl implements ApproverContract {
             // **** Ok phase *** //
 
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&(!(sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
                 // TODO validate sender is in Committee ?
                 numberOReceivedOK++;
 

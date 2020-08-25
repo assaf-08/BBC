@@ -203,7 +203,7 @@ public class Main {
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
         BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
         int proposal = proposals[nodeID];
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             int result = bbc.propose(proposal, new MetaData(i, i, i));
             System.out.println("BBC Round: " + i + " BBC result: " + result);
         }
