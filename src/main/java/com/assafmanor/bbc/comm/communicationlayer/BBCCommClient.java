@@ -34,7 +34,7 @@ public class BBCCommClient {
         ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).build();
         blockingStubs.forEach((node_addr, stub) -> {
                     try {
-                        Response returnCode = stub.sendApproveMsg(approveMsg);
+                        Response returnCode = stub.withWaitForReady().sendApproveMsg(approveMsg);
                     } catch (StatusRuntimeException e) {
 
                         assert (false);
@@ -50,7 +50,7 @@ public class BBCCommClient {
         CoinMsg coinMsg = CoinMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setVrfResult(vrfMsg).build();
         blockingStubs.forEach((node_id, stub) -> {
                     try {
-                        Response returnCode = stub.sendCoinMsg(coinMsg);
+                        Response returnCode = stub.withWaitForReady().sendCoinMsg(coinMsg);
                     } catch (StatusRuntimeException e) {
                         e.printStackTrace();
                         throw e;
