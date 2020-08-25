@@ -31,8 +31,6 @@ message MsgHeader {
     int32 sender_id = 1;
     Meta meta = 2;
     int32 round = 3;
-
-
 }
 
 message CommitteeData {
@@ -55,4 +53,5 @@ message ApproveMsg {
     MsgHeader header = 1;
     string tag = 2;
     int32 value = 3;
+    int32 stage = 4;
 }

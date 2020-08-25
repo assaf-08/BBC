@@ -20,8 +20,9 @@ public class BBCCommImpl implements BBCCommContract {
     }
 
     @Override
-    public void broadcastApproveMsg(int round, String tag, Integer value, MetaData meta) {
-        client.broadcastApproveMsg(round, tag, value, meta);
+    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta) {
+        assert stage <= 1;
+        client.broadcastApproveMsg(round, stage, tag, value, meta);
     }
 
     @Override
@@ -35,8 +36,8 @@ public class BBCCommImpl implements BBCCommContract {
     }
 
     @Override
-    public ApproverMsg popApproverMsg(int r, MetaData meta) {
-        return this.server.popApproveMsg(meta, r);
+    public ApproverMsg popApproverMsg(int r, int stage, MetaData meta) {
+        return this.server.popApproveMsg(meta, r, stage);
     }
 
     @Override
