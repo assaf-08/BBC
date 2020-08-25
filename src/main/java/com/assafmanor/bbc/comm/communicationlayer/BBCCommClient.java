@@ -29,9 +29,10 @@ public class BBCCommClient {
     }
 
 
-    public void broadcastApproveMsg(int round, String tag, Integer value, MetaData meta) {
-        LOGGER.log(Level.INFO, "Broadcasting approve message Round: " + round + " Tag: " + tag);
-        ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).build();
+    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta) {
+        assert stage <= 1;
+        LOGGER.log(Level.FINEST, "Broadcasting approve message Round: " + round + " Tag: " + tag);
+        ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).setStage(stage).build();
         blockingStubs.forEach((node_addr, stub) -> {
                     try {
                         Response returnCode = stub.withWaitForReady().sendApproveMsg(approveMsg);
@@ -45,7 +46,7 @@ public class BBCCommClient {
 
 
     public void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta) {
-        LOGGER.log(Level.INFO, "Broadcasting coin message Round: " + String.valueOf(round) + " Tag: " + String.valueOf(tag));
+        LOGGER.log(Level.FINEST, "Broadcasting coin message Round: " + String.valueOf(round) + " Tag: " + String.valueOf(tag));
         VRFMsg vrfMsg = VRFMsg.newBuilder().setVrfOutput(vrfResult.getVRFOutput()).setVrfProof(vrfResult.getVRFProof()).build();
         CoinMsg coinMsg = CoinMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setVrfResult(vrfMsg).build();
         blockingStubs.forEach((node_id, stub) -> {

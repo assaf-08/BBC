@@ -24,7 +24,8 @@ public class BBCCommServer {
 
     // Meta -> Round -> CoinMsg
     private final HashMap<MetaData, HashMap<Integer, BlockingQueue<CoinMsg>>> coinMsgs = new HashMap<>();
-    private final HashMap<MetaData, HashMap<Integer, BlockingQueue<ApproveMsg>>> approveMsgs = new HashMap<>();
+    // Meta->Round->Stage->ApproveMsg
+    private final HashMap<MetaData, HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>>> approveMsgs = new HashMap<>();
 
     private final static Logger LOGGER = Logger.getLogger(BBCCommServer.class.getName());
     private final Server server;
@@ -38,7 +39,7 @@ public class BBCCommServer {
     public CoinMessage popCoinMsg(MetaData meta, int r) {
         HashMap<Integer, BlockingQueue<CoinMsg>> sessionMap;
         BlockingQueue<CoinMsg> roundQueue;
-        LOGGER.log(Level.INFO, "Start pop coin");
+        LOGGER.log(Level.FINEST, "Start pop coin");
         synchronized (coinMsgs) {
             while (coinMsgs.get(meta) == null) {
                 try {
@@ -66,15 +67,16 @@ public class BBCCommServer {
             e.printStackTrace();
         }
         VRFResult vrfResult = new VRFResult(rawMsg.getVrfResult().getVrfOutput(), rawMsg.getVrfResult().getVrfOutput());
-        LOGGER.log(Level.INFO, "End Pop coin");
+        LOGGER.log(Level.FINEST, "End Pop coin");
         return new CoinMessage(rawMsg.getTag(), vrfResult, rawMsg.getHeader().getSenderId(), rawMsg.getCommitteeData().getProof(), rawMsg.getHeader().getRound());
 
     }
 
-    public ApproverMsg popApproveMsg(MetaData meta, int r) {
-        LOGGER.log(Level.INFO, "Start pop approve");
-        HashMap<Integer, BlockingQueue<ApproveMsg>> sessionMap;
-        BlockingQueue<ApproveMsg> roundQueue;
+    public ApproverMsg popApproveMsg(MetaData meta, int r, int stage) {
+        LOGGER.log(Level.FINEST, "Start pop approve");
+        HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>> sessionMap;
+        HashMap<Integer, BlockingQueue<ApproveMsg>> stageMap;
+        BlockingQueue<ApproveMsg> msgQueue;
         synchronized (approveMsgs) {
             while (approveMsgs.get(meta) == null) {
                 try {
@@ -91,16 +93,23 @@ public class BBCCommServer {
                     e.printStackTrace();
                 }
             }
-            roundQueue = sessionMap.get(r);
-
+            stageMap = sessionMap.get(r);
+            while (stageMap.get(stage) == null) {
+                try {
+                    approveMsgs.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            msgQueue = stageMap.get(stage);
         }
         ApproveMsg rawMsg = null;
         try {
-            rawMsg = roundQueue.take();
+            rawMsg = msgQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LOGGER.log(Level.INFO, "End pop approve");
+        LOGGER.log(Level.FINEST, "End pop approve");
         return new ApproverMsg(rawMsg.getTag(), rawMsg.getValue());
     }
 
@@ -137,11 +146,10 @@ public class BBCCommServer {
                 roundQueue = sessionMap.get(round);
                 roundQueue.add(request);
                 coinMsgs.notifyAll();
-                LOGGER.log(Level.INFO, "Recieved COIN message from " + request.getHeader().getSenderId() +
-                        " Round: " + request.getHeader().getRound() + " Phase: " + request.getTag()+"\nCurrent session Coin size is: "+
+                LOGGER.log(Level.FINEST, "Recieved COIN message from " + request.getHeader().getSenderId() +
+                        " Round: " + request.getHeader().getRound() + " Phase: " + request.getTag() + "\nCurrent session Coin size is: " +
                         roundQueue.size());
             }
-
 
 
         }
@@ -149,23 +157,30 @@ public class BBCCommServer {
         private void addApproveMsg(ApproveMsg request) {
             MetaData meta = new MetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
             int round = request.getHeader().getRound();
-            HashMap<Integer, BlockingQueue<ApproveMsg>> sessionMap;
-            BlockingQueue<ApproveMsg> roundQueue;
+            int stage = request.getStage();
+            HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>> sessionMap;
+            HashMap<Integer, BlockingQueue<ApproveMsg>> stageMap;
+            BlockingQueue<ApproveMsg> msgQueue;
             synchronized (approveMsgs) {
                 if (!approveMsgs.containsKey(meta)) {
                     approveMsgs.put(meta, new HashMap<>());
                 }
                 sessionMap = approveMsgs.get(meta);
                 if (!sessionMap.containsKey(round)) {
-                    sessionMap.put(round, new LinkedBlockingQueue<>());
+                    sessionMap.put(round, new HashMap<>());
+
                 }
-                roundQueue = sessionMap.get(round);
-                roundQueue.add(request);
+                stageMap = sessionMap.get(round);
+                if (!stageMap.containsKey(stage)) {
+                    stageMap.put(stage, new LinkedBlockingQueue<>());
+                }
+                msgQueue = stageMap.get(stage);
+                msgQueue.add(request);
                 approveMsgs.notifyAll();
             }
-            LOGGER.log(Level.INFO, "Recieved Approve message from " + request.getHeader().getSenderId() +
-                    " Round: " + request.getHeader().getRound() +" Value: "+request.getValue()+ " Phase: " + request.getTag()+"\nCurrent session approve queue size is: "+
-                    roundQueue.size());
+            LOGGER.log(Level.FINEST, "Recieved Approve message from " + request.getHeader().getSenderId() +
+                    " Round: " + request.getHeader().getRound() + " Value: " + request.getValue() + " Phase: " + request.getTag() + "\nCurrent session approve queue size is: " +
+                    msgQueue.size());
 
         }
 

@@ -16,6 +16,7 @@ import com.assafmanor.bbc.vrf.DummyVRFImpl;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,49 +26,10 @@ public class Main {
 //        runCoin();
 //        runCoinTermination();
 //        runApprover();
-        runApproverTermination();
+//        runApproverTermination();
+//        runRandomApproverTermination();
 //        runPropose();
-//        runTermiationTest();
-//        Map<String, String> env = System.getenv();
-//        assert (env.containsKey("node_id"));
-//        String idStr = env.get("node_id");
-//        System.out.println("Starting node " + idStr);
-//        System.out.println("BBBBBB");
-//        int id = Integer.parseInt(idStr);
-//        BBCCommServer server = new BBCCommServer(id,8080);
-//        try {
-//            server.start();
-//        }
-//        catch (IOException e){
-//            assert false;
-//        }
-//        List<String> hosts = new ArrayList<>();
-//        hosts.add(id == 0 ? "node1" : "node0");
-//        BBCCommClient client = new BBCCommClient(id,hosts,8080);
-//        if(id==1) {
-//            try {
-//                server.blockUntilShutdown();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        if(id==0){
-//            client.sendMSG("node1","LLLLBla Bla");
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            client.sendMSG("node1","Bl55a Bla");
-//        }
-//
+        runProposeTermination();
 
     }
 
@@ -111,7 +73,7 @@ public class Main {
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
 
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             Integer res = coin.sharedCoin(i, TestUtils.createDummyMeta());
             System.out.println("Coin result: " + res.toString() + " " + i);
         }
@@ -140,7 +102,7 @@ public class Main {
             e.printStackTrace();
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
-        HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, 0, TestUtils.createDummyMeta());
+        HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, 0, 0, TestUtils.createDummyMeta());
         System.out.println(approveResult.toString());
     }
 
@@ -158,15 +120,34 @@ public class Main {
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
-        for (int i = 0; i < 1000; i++) {
-            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, i, TestUtils.createDummyMeta());
-            System.out.println(approveResult.toString()+" Round: "+i);
+        for (int i = 0; i < 10000; i++) {
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, i, 0, new MetaData(i, i, i));
+            System.out.println(approveResult.toString() + " Round: " + i);
+        }
+    }
+
+    private static void runRandomApproverTermination() {
+        Integer nodeID = TestUtils.getNodeId(true);
+
+        System.out.println("Node " + nodeID.toString() + " Has started");
+        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        try {
+            communicator.startServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+
+        Random rand = new Random();
+        ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
+        for (int i = 0; i < 10000; i++) {
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new MetaData(i, i, i));
+            System.out.println(approveResult.toString() + " Round: " + i);
         }
     }
 
@@ -196,10 +177,10 @@ public class Main {
         int proposal = proposals[nodeID];
         int result = bbc.propose(proposal, TestUtils.createDummyMeta());
         System.out.println("BBC result: " + result);
-        assert result == 0;
+
     }
 
-    private static void runTerminationTest() {
+    private static void runProposeTermination() {
         int[] proposals = new int[]{0, 0, 1};
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
@@ -224,7 +205,7 @@ public class Main {
         int proposal = proposals[nodeID];
         for (int i = 0; i < 1000; i++) {
             int result = bbc.propose(proposal, new MetaData(i, i, i));
-            System.out.println("Round: " + i + " BBC result: " + result);
+            System.out.println("BBC Round: " + i + " BBC result: " + result);
         }
 
     }
