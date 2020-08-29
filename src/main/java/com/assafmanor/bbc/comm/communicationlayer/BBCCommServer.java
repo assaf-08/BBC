@@ -1,7 +1,9 @@
 package com.assafmanor.bbc.comm.communicationlayer;
 
 import com.assafmanor.bbc.approver.ApproverMsg;
+import com.assafmanor.bbc.bbc.BBCConfig;
 import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.OnRcvFirstProtocolMsgCallback;
 import com.assafmanor.bbc.comm.ApproveMsg;
 import com.assafmanor.bbc.comm.BBCCommGrpc;
 import com.assafmanor.bbc.comm.CoinMsg;
@@ -31,9 +33,11 @@ public class BBCCommServer {
     private final Server server;
     private final int id;
 
-    public BBCCommServer(int id, int port) {
+
+    public BBCCommServer(int id, int port, OnRcvFirstProtocolMsgCallback callback) {
         this.id = id;
-        server = ServerBuilder.forPort(port).addService(new BBCService()).build();
+        server = ServerBuilder.forPort(port).addService(new BBCService(callback)).build();
+
     }
 
     public CoinMessage popCoinMsg(MetaData meta, int r) {
@@ -115,6 +119,11 @@ public class BBCCommServer {
 
 
     private class BBCService extends BBCCommGrpc.BBCCommImplBase {
+        private OnRcvFirstProtocolMsgCallback onRcvFirstProtocolMsgCallback;
+
+        public BBCService(OnRcvFirstProtocolMsgCallback callback) {
+            this.onRcvFirstProtocolMsgCallback = callback;
+        }
 
         @Override
         public void sendCoinMsg(CoinMsg request, StreamObserver<Response> responseObserver) {
@@ -156,6 +165,14 @@ public class BBCCommServer {
 
         private void addApproveMsg(ApproveMsg request) {
             MetaData meta = new MetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
+
+            if (this.onRcvFirstProtocolMsgCallback != null && request.getHeader().getRound() == 0
+                    && request.getStage() == BBCConfig.ApproverStage.FIRST_CALL &&
+                    request.getTag().equals(BBCConfig.ApproverTags.INIT)) {
+                this.onRcvFirstProtocolMsgCallback.onReceiveFirstProtocolMsg(meta, request.getHeader().getHeight());
+
+            }
+
             int round = request.getHeader().getRound();
             int stage = request.getStage();
             HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>> sessionMap;

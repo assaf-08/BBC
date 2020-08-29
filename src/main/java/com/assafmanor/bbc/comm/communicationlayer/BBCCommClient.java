@@ -46,7 +46,7 @@ public class BBCCommClient {
 
 
     public void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta) {
-        LOGGER.log(Level.FINEST, "Broadcasting coin message Round: " + String.valueOf(round) + " Tag: " + String.valueOf(tag));
+        LOGGER.log(Level.FINEST, "Broadcasting coin message Round: " + round + " Tag: " + tag);
         VRFMsg vrfMsg = VRFMsg.newBuilder().setVrfOutput(vrfResult.getVRFOutput()).setVrfProof(vrfResult.getVRFProof()).build();
         CoinMsg coinMsg = CoinMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setVrfResult(vrfMsg).build();
         blockingStubs.forEach((node_id, stub) -> {
@@ -61,6 +61,7 @@ public class BBCCommClient {
     }
 
     private MsgHeader createMsgHeader(MetaData meta, int round) {
+        //TODO add height to header.
         Meta rawMeta = Meta.newBuilder().setChannel(meta.getChannel()).setCid(meta.getCid()).setCidSeries(meta.getCidSeries()).build();
         MsgHeader msgHeader = MsgHeader.newBuilder().setSenderId(this.id).setMeta(rawMeta).setRound(round).build();
         return msgHeader;
