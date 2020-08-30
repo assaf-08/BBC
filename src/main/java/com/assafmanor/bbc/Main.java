@@ -29,9 +29,9 @@ public class Main {
 //        runCoinTermination();
 //        runApprover();
 //        runApproverTermination();
-//        runRandomApproverTermination();
+        runRandomApproverTermination();
 //        runPropose();
-        runProposeTermination();
+//        runProposeTermination();
 //        runNonBlockingPropose();
 
 
@@ -87,9 +87,7 @@ public class Main {
 
     private static void runApprover() {
         Integer nodeID = TestUtils.getNodeId(true);
-        if (nodeID >= 2) {
-            return;
-        }
+
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
         try {
