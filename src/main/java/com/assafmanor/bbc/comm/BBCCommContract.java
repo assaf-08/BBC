@@ -10,7 +10,7 @@ import java.io.IOException;
 public interface BBCCommContract {
 
 
-    void broadcastApproveMsg(int round,int stage, String tag, Integer value, MetaData meta);
+    void broadcastApproveMsg(int round,int stage, String tag, Integer value, MetaData meta, int sender);
 
     void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta);
 

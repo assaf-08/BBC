@@ -101,6 +101,7 @@ public class Main {
 //        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

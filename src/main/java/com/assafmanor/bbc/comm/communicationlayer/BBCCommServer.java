@@ -110,7 +110,7 @@ public class BBCCommServer {
             e.printStackTrace();
         }
         LOGGER.log(Level.FINEST, "End pop approve");
-        return new ApproverMsg(rawMsg.getTag(), rawMsg.getValue());
+        return new ApproverMsg(rawMsg.getTag(), rawMsg.getValue(), rawMsg.getSender);
     }
 
 

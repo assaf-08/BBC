@@ -5,6 +5,7 @@ import com.assafmanor.bbc.bbc.MetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,18 +26,25 @@ public class ApproverImpl implements ApproverContract {
         int[] numberOReceivedINIT = new int[3];
         int[] numberOReceivedECHO = new int[3];
         int numberOReceivedOK = 0;
+        Set<Integer> nodesSentINIT = new HashSet<>();
+        Set<Integer> nodesSentECHO = new HashSet<>();
+        Set<Integer> nodesSentOK = new HashSet<>();
+
         boolean sentOkMsg = false;
         SampleResult sampleResult = sampler.sample(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
         if (sampleResult.getResult()) {
-            communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.INIT, v, meta);
+            communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.INIT, v, meta, this.nodeID);
+
         }
         while (true) {
             ApproverMsg approverMsg = communicator.popApproverMsg(round,stage, meta);
             assert approverMsg.getValue() <= 2 && approverMsg.getValue() >= 0;
             // **** Init phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
-
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&
+                    ((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
+                       /*&& !nodesSentINIT.contains(approverMsg.getSender())*/) {
+                nodesSentINIT.add(approverMsg.getSender());
                 numberOReceivedINIT[approverMsg.getValue()]++;
 
                 if (numberOReceivedINIT[approverMsg.getValue()] == BBCConfig.getNumberOfMaxByzantineNodes() + 1) {
@@ -44,22 +52,23 @@ public class ApproverImpl implements ApproverContract {
                     sampleResult = sampler.sample(sampleTag, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
                     if (sampleResult.getResult()) {
 
-                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.ECHO, approverMsg.getValue(), meta);
+                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.ECHO, approverMsg.getValue(), meta, this.nodeID);
                     }
                 }
             }
 
             // **** Echo phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)&&((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
-
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)
+                    &&((sampler.committeeValidate(BBCConfig.ApproverTags.ECHO, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
+                        /*&& !nodesSentECHO.contains(approverMsg.getSender())*/) {
+                nodesSentECHO.add(approverMsg.getSender());
                 numberOReceivedECHO[approverMsg.getValue()]++;
 
-                if (numberOReceivedECHO[approverMsg.getValue()] == BBCConfig.getNumberOfMinCorrectNodesInCommittee()) {
+                if (numberOReceivedECHO[approverMsg.getValue()] == BBCConfig.getNumberOfMinCorrectNodesInCommittee() && !sentOkMsg) {
                     sampleResult = sampler.sample(BBCConfig.ApproverTags.OK, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
-                    // TODO move sentOk up
-                    if (sampleResult.getResult() && !sentOkMsg) {
-                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.OK, approverMsg.getValue(), meta);
+                    if (sampleResult.getResult() ) {
+                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.OK, approverMsg.getValue(), meta, this.nodeID);
                         sentOkMsg = true;
                     }
 
@@ -69,8 +78,11 @@ public class ApproverImpl implements ApproverContract {
             // **** Ok phase *** //
 
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))) {
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&
+                    ((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
+                        /*&& !nodesSentOK.contains(approverMsg.getSender())*/) {
                 // TODO validate sender is in Committee ?
+                nodesSentOK.add(approverMsg.getSender());
                 numberOReceivedOK++;
 
                 retSet.add(approverMsg.getValue());

@@ -29,10 +29,10 @@ public class BBCCommClient {
     }
 
 
-    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta) {
+    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta, int sender) {
         assert stage <= 1;
         LOGGER.log(Level.FINEST, "Broadcasting approve message Round: " + round + " Tag: " + tag);
-        ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).setStage(stage).build();
+        ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).setStage(stage).setSender(sender).build();
         blockingStubs.forEach((node_addr, stub) -> {
                     try {
                         Response returnCode = stub.withWaitForReady().sendApproveMsg(approveMsg);
