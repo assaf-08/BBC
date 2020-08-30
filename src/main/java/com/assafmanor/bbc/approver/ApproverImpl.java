@@ -33,17 +33,17 @@ public class ApproverImpl implements ApproverContract {
         boolean sentOkMsg = false;
         SampleResult sampleResult = sampler.sample(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
         if (sampleResult.getResult()) {
-            communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.INIT, v, meta, this.nodeID);
+            communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.INIT, v, meta);
 
         }
         while (true) {
-            ApproverMsg approverMsg = communicator.popApproverMsg(round,stage, meta);
+            ApproverMsg approverMsg = communicator.popApproverMsg(round, stage, meta);
             assert approverMsg.getValue() <= 2 && approverMsg.getValue() >= 0;
             // **** Init phase *** //
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT)&&
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT) &&
                     ((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
-                       /*&& !nodesSentINIT.contains(approverMsg.getSender())*/) {
+                /*&& !nodesSentINIT.contains(approverMsg.getSender())*/) {
                 nodesSentINIT.add(approverMsg.getSender());
                 numberOReceivedINIT[approverMsg.getValue()]++;
 
@@ -52,7 +52,7 @@ public class ApproverImpl implements ApproverContract {
                     sampleResult = sampler.sample(sampleTag, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
                     if (sampleResult.getResult()) {
 
-                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.ECHO, approverMsg.getValue(), meta, this.nodeID);
+                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.ECHO, approverMsg.getValue(), meta);
                     }
                 }
             }
@@ -60,15 +60,15 @@ public class ApproverImpl implements ApproverContract {
             // **** Echo phase *** //
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)
-                    &&((sampler.committeeValidate(BBCConfig.ApproverTags.ECHO, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
-                        /*&& !nodesSentECHO.contains(approverMsg.getSender())*/) {
+                    && ((sampler.committeeValidate(BBCConfig.ApproverTags.ECHO, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
+                /*&& !nodesSentECHO.contains(approverMsg.getSender())*/) {
                 nodesSentECHO.add(approverMsg.getSender());
                 numberOReceivedECHO[approverMsg.getValue()]++;
 
                 if (numberOReceivedECHO[approverMsg.getValue()] == BBCConfig.getNumberOfMinCorrectNodesInCommittee() && !sentOkMsg) {
                     sampleResult = sampler.sample(BBCConfig.ApproverTags.OK, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
-                    if (sampleResult.getResult() ) {
-                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.OK, approverMsg.getValue(), meta, this.nodeID);
+                    if (sampleResult.getResult()) {
+                        communicator.broadcastApproveMsg(round, stage, BBCConfig.ApproverTags.OK, approverMsg.getValue(), meta);
                         sentOkMsg = true;
                     }
 
@@ -78,9 +78,9 @@ public class ApproverImpl implements ApproverContract {
             // **** Ok phase *** //
 
 
-            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK)&&
+            if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK) &&
                     ((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
-                        /*&& !nodesSentOK.contains(approverMsg.getSender())*/) {
+                /*&& !nodesSentOK.contains(approverMsg.getSender())*/) {
                 // TODO validate sender is in Committee ?
                 nodesSentOK.add(approverMsg.getSender());
                 numberOReceivedOK++;

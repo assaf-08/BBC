@@ -20,9 +20,9 @@ public class BBCCommImpl implements BBCCommContract {
     }
 
     @Override
-    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta, int sender) {
+    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta) {
         assert stage <= 1;
-        client.broadcastApproveMsg(round, stage, tag, value, meta, sender);
+        client.broadcastApproveMsg(round, stage, tag, value, meta);
     }
 
     @Override
