@@ -5,7 +5,7 @@ import com.assafmanor.bbc.bbc.MetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
-import javafx.util.Pair;
+
 
 import java.util.HashSet;
 import java.util.Set;
