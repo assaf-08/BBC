@@ -79,7 +79,7 @@ public class ApproverImpl implements ApproverContract {
 
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK) &&
-                    ((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
+                    ((sampler.committeeValidate(BBCConfig.ApproverTags.OK, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
                 && !nodesSentOK.contains(approverMsg.getSender())) {
                 // TODO validate sender is in Committee ?
                 nodesSentOK.add(approverMsg.getSender());
