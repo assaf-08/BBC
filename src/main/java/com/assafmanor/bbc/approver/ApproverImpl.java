@@ -43,12 +43,12 @@ public class ApproverImpl implements ApproverContract {
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.INIT) &&
                     ((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
-                /*&& !nodesSentINIT.contains(approverMsg.getSender())*/) {
+                && !nodesSentINIT.contains(approverMsg.getSender())) {
                 nodesSentINIT.add(approverMsg.getSender());
                 numberOReceivedINIT[approverMsg.getValue()]++;
 
                 if (numberOReceivedINIT[approverMsg.getValue()] == BBCConfig.getNumberOfMaxByzantineNodes() + 1) {
-                    String sampleTag = BBCConfig.ApproverTags.ECHO + "_" + v.toString(); // TODO make better
+                    String sampleTag = BBCConfig.ApproverTags.ECHO + "_" + v.toString();
                     sampleResult = sampler.sample(sampleTag, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD);
                     if (sampleResult.getResult()) {
 
@@ -61,7 +61,7 @@ public class ApproverImpl implements ApproverContract {
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.ECHO)
                     && ((sampler.committeeValidate(BBCConfig.ApproverTags.ECHO, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
-                /*&& !nodesSentECHO.contains(approverMsg.getSender())*/) {
+                && !nodesSentECHO.contains(approverMsg.getSender())) {
                 nodesSentECHO.add(approverMsg.getSender());
                 numberOReceivedECHO[approverMsg.getValue()]++;
 
@@ -80,7 +80,7 @@ public class ApproverImpl implements ApproverContract {
 
             if (approverMsg.getTag().equals(BBCConfig.ApproverTags.OK) &&
                     ((sampler.committeeValidate(BBCConfig.ApproverTags.INIT, BBCConfig.SAMPLE_COMMITTEE_THRESHOLD, this.nodeID, sampleResult.getProof())))
-                /*&& !nodesSentOK.contains(approverMsg.getSender())*/) {
+                && !nodesSentOK.contains(approverMsg.getSender())) {
                 // TODO validate sender is in Committee ?
                 nodesSentOK.add(approverMsg.getSender());
                 numberOReceivedOK++;
