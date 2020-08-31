@@ -10,13 +10,13 @@ import java.io.IOException;
 public interface BBCCommContract {
 
 
-    void broadcastApproveMsg(int round,int stage, String tag, Integer value, MetaData meta);
+    void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta);
 
     void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta);
 
     CoinMessage popCoinMsg(int round, MetaData meta);
 
-    ApproverMsg popApproverMsg(int round,int stage, MetaData meta);
+    ApproverMsg popApproverMsg(int round, int stage, MetaData meta);
 
     void addNodeToBroadcastList(String host, int port);
 

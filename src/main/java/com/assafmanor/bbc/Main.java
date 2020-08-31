@@ -8,7 +8,7 @@ import com.assafmanor.bbc.bbc.BBCConfig;
 import com.assafmanor.bbc.bbc.NonBlockingProposeCallback;
 import com.assafmanor.bbc.bbc.MetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
-import com.assafmanor.bbc.comm.BBCCommImpl;
+import com.assafmanor.bbc.comm.BBCCommImplBuilder;
 import com.assafmanor.bbc.sampler.DummySamplerImpl;
 import com.assafmanor.bbc.sharedcoin.SharedCoinContract;
 import com.assafmanor.bbc.sharedcoin.WHPCoinImpl;
@@ -42,7 +42,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
 
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         try {
             communicator.startServer();
         } catch (IOException e) {
@@ -64,7 +64,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
 
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
 
         try {
             communicator.startServer();
@@ -89,7 +89,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
 
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         try {
             communicator.startServer();
         } catch (IOException e) {
@@ -114,7 +114,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
 
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         try {
             communicator.startServer();
         } catch (IOException e) {
@@ -136,7 +136,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
 
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         try {
             communicator.startServer();
         } catch (IOException e) {
@@ -160,7 +160,7 @@ public class Main {
         int[] proposals = new int[]{0, 0, 1};
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         try {
             communicator.startServer();
         } catch (IOException e) {
@@ -188,7 +188,7 @@ public class Main {
         int[] proposals = new int[]{0, 0, 1};
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         try {
             communicator.startServer();
         } catch (IOException e) {
@@ -220,7 +220,7 @@ public class Main {
         int[] proposals = new int[]{0, 0, 1};
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
-        BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         try {
             communicator.startServer();
         } catch (IOException e) {
