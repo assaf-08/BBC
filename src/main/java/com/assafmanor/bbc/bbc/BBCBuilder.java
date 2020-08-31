@@ -44,6 +44,11 @@ public class BBCBuilder {
         return this;
     }
 
+    public BBCBuilder setOnRcvFirstProtocolMsgCallback(OnRcvFirstProtocolMsgCallback callback){
+        this.onRcvFirstProtocolMsgCallback = callback;
+        this.bbcCommImplBuilder.setOnFirstProtocolMsgCallback(callback);
+        return this;
+    }
 
     public BBC build() {
         BBCCommContract bbcComm = this.communicator == null ? this.bbcCommImplBuilder.build() : this.communicator;
