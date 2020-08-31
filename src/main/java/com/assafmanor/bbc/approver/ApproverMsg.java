@@ -3,10 +3,19 @@ package com.assafmanor.bbc.approver;
 public class ApproverMsg {
     private String tag;
     private Integer value;
+    private int sender;
 
-    public ApproverMsg(String tag, Integer value) {
+    public ApproverMsg(String tag, Integer value, int sender) {
         this.tag = tag;
         this.value = value;
+        this.sender = sender;
+    }
+    public void setSender(int sender){
+        this.sender = sender;
+    }
+
+    public int getSender(){
+        return sender;
     }
 
     public String getTag() {

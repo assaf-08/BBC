@@ -31,8 +31,8 @@ public class Main {
 //        runApproverTermination();
 //        runRandomApproverTermination();
 //        runPropose();
-        runProposeTermination();
-//        runNonBlockingPropose();
+//        runProposeTermination();
+        runNonBlockingPropose();
 
 
     }
@@ -87,9 +87,7 @@ public class Main {
 
     private static void runApprover() {
         Integer nodeID = TestUtils.getNodeId(true);
-        if (nodeID >= 2) {
-            return;
-        }
+
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImpl(nodeID, TestUtils.TEST_PORT);
         try {
@@ -101,6 +99,7 @@ public class Main {
 //        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
