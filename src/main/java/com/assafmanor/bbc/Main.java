@@ -29,10 +29,10 @@ public class Main {
 //        runCoinTermination();
 //        runApprover();
 //        runApproverTermination();
-        runRandomApproverTermination();
+//        runRandomApproverTermination();
 //        runPropose();
 //        runProposeTermination();
-//        runNonBlockingPropose();
+        runNonBlockingPropose();
 
 
     }

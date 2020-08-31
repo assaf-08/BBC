@@ -6,7 +6,6 @@ import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +22,6 @@ public class ApproverImpl implements ApproverContract {
 
     @Override
     public Set<Integer> approve(Integer v, Integer round, Integer stage, MetaData meta) {
-        System.out.println("Value "+v+" Round "+round);
         HashSet<Integer> retSet = new HashSet<>();
         int[] numberOReceivedINIT = new int[3];
         int[] numberOReceivedECHO = new int[3];
