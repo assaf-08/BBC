@@ -2,5 +2,5 @@ package com.assafmanor.bbc.bbc;
 
 
 public interface OnRcvFirstProtocolMsgCallback {
-    void onReceiveFirstProtocolMsg(MetaData meta, int height);
+    void onReceiveFirstProtocolMsg(BBCMetaData meta, int height);
 }

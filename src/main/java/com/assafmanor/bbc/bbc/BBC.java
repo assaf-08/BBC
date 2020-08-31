@@ -19,7 +19,7 @@ public class BBC {
     }
 
 
-    public int propose(int v, MetaData meta) {
+    public int propose(int v, BBCMetaData meta) {
         int estimate = v;
         int decision = EMPTY_VALUE;
         Integer propose;
@@ -60,7 +60,7 @@ public class BBC {
         return decision;
     }
 
-    public void nonBlockingPropose(int v, MetaData meta,NonBlockingProposeCallback callback){
+    public void nonBlockingPropose(int v, BBCMetaData meta, NonBlockingProposeCallback callback){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {

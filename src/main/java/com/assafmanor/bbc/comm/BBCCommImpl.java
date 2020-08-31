@@ -6,7 +6,7 @@ import com.assafmanor.bbc.comm.communicationlayer.BBCCommClient;
 import com.assafmanor.bbc.comm.communicationlayer.BBCCommServer;
 import com.assafmanor.bbc.vrf.types.CoinMessage;
 import com.assafmanor.bbc.vrf.types.VRFResult;
-import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 
 import java.io.IOException;
 
@@ -21,23 +21,23 @@ public class BBCCommImpl implements BBCCommContract {
     }
 
     @Override
-    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta) {
+    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, BBCMetaData meta) {
         assert stage <= 1;
         client.broadcastApproveMsg(round, stage, tag, value, meta);
     }
 
     @Override
-    public void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta) {
+    public void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, BBCMetaData meta) {
         client.broadcastCoinMsg(round, tag, vrfResult, meta);
     }
 
     @Override
-    public CoinMessage popCoinMsg(int round, MetaData meta) {
+    public CoinMessage popCoinMsg(int round, BBCMetaData meta) {
         return this.server.popCoinMsg(meta, round);
     }
 
     @Override
-    public ApproverMsg popApproverMsg(int r, int stage, MetaData meta) {
+    public ApproverMsg popApproverMsg(int r, int stage, BBCMetaData meta) {
         return this.server.popApproveMsg(meta, r, stage);
     }
 

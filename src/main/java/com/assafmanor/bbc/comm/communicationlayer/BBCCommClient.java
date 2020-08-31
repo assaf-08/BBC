@@ -5,7 +5,7 @@ import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import com.assafmanor.bbc.vrf.types.VRFResult;
-import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -29,7 +29,7 @@ public class BBCCommClient {
     }
 
 
-    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, MetaData meta) {
+    public void broadcastApproveMsg(int round, int stage, String tag, Integer value, BBCMetaData meta) {
         assert stage <= 1;
         LOGGER.log(Level.FINEST, "Broadcasting approve message Round: " + round + " Tag: " + tag);
         ApproveMsg approveMsg = ApproveMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setValue(value).setStage(stage).build();
@@ -45,7 +45,7 @@ public class BBCCommClient {
     }
 
 
-    public void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, MetaData meta) {
+    public void broadcastCoinMsg(int round, String tag, VRFResult vrfResult, BBCMetaData meta) {
         LOGGER.log(Level.FINEST, "Broadcasting coin message Round: " + round + " Tag: " + tag);
         VRFMsg vrfMsg = VRFMsg.newBuilder().setVrfOutput(vrfResult.getVRFOutput()).setVrfProof(vrfResult.getVRFProof()).build();
         CoinMsg coinMsg = CoinMsg.newBuilder().setHeader(createMsgHeader(meta, round)).setTag(tag).setVrfResult(vrfMsg).build();
@@ -60,7 +60,7 @@ public class BBCCommClient {
         );
     }
 
-    private MsgHeader createMsgHeader(MetaData meta, int round) {
+    private MsgHeader createMsgHeader(BBCMetaData meta, int round) {
         //TODO add height to header.
         Meta rawMeta = Meta.newBuilder().setChannel(meta.getChannel()).setCid(meta.getCid()).setCidSeries(meta.getCidSeries()).build();
         MsgHeader msgHeader = MsgHeader.newBuilder().setSenderId(this.id).setMeta(rawMeta).setRound(round).build();

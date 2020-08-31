@@ -1,7 +1,7 @@
 package com.assafmanor.bbc.sharedcoin;
 
 import com.assafmanor.bbc.bbc.BBCConfig;
-import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
@@ -25,7 +25,7 @@ public class WHPCoinImpl implements SharedCoinContract {
     }
 
     @Override
-    public int sharedCoin(int r, MetaData meta) {
+    public int sharedCoin(int r, BBCMetaData meta) {
         Set<Integer> firstSet = new HashSet<>();
         Set<Integer> secondtSet = new HashSet<>();
         VRFResult currentVrfResult = null;

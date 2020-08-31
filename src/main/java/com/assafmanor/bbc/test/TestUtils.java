@@ -1,6 +1,6 @@
 package com.assafmanor.bbc.test;
 
-import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ public class TestUtils {
         return id;
     }
 
-    public static MetaData createDummyMeta(){
-        return new MetaData(0,0,0);
+    public static BBCMetaData createDummyMeta(){
+        return new BBCMetaData(0,0,0);
     }
 }

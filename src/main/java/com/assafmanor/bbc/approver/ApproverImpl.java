@@ -1,7 +1,7 @@
 package com.assafmanor.bbc.approver;
 
 import com.assafmanor.bbc.bbc.BBCConfig;
-import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sampler.SamplerContract;
 import com.assafmanor.bbc.sampler.types.SampleResult;
@@ -21,7 +21,7 @@ public class ApproverImpl implements ApproverContract {
     }
 
     @Override
-    public Set<Integer> approve(Integer v, Integer round, Integer stage, MetaData meta) {
+    public Set<Integer> approve(Integer v, Integer round, Integer stage, BBCMetaData meta) {
         HashSet<Integer> retSet = new HashSet<>();
         int[] numberOReceivedINIT = new int[3];
         int[] numberOReceivedECHO = new int[3];

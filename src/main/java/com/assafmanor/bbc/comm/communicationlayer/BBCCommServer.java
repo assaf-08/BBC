@@ -2,7 +2,7 @@ package com.assafmanor.bbc.comm.communicationlayer;
 
 import com.assafmanor.bbc.approver.ApproverMsg;
 import com.assafmanor.bbc.bbc.BBCConfig;
-import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 import com.assafmanor.bbc.bbc.OnRcvFirstProtocolMsgCallback;
 import com.assafmanor.bbc.comm.ApproveMsg;
 import com.assafmanor.bbc.comm.BBCCommGrpc;
@@ -18,16 +18,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BBCCommServer {
 
     // Meta -> Round -> CoinMsg
-    private final HashMap<MetaData, HashMap<Integer, BlockingQueue<CoinMsg>>> coinMsgs = new HashMap<>();
+    private final HashMap<BBCMetaData, HashMap<Integer, BlockingQueue<CoinMsg>>> coinMsgs = new HashMap<>();
     // Meta->Round->Stage->ApproveMsg
-    private final HashMap<MetaData, HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>>> approveMsgs = new HashMap<>();
+    private final HashMap<BBCMetaData, HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>>> approveMsgs = new HashMap<>();
 
     private final static Logger LOGGER = Logger.getLogger(BBCCommServer.class.getName());
     private final Server server;
@@ -40,7 +39,7 @@ public class BBCCommServer {
 
     }
 
-    public CoinMessage popCoinMsg(MetaData meta, int r) {
+    public CoinMessage popCoinMsg(BBCMetaData meta, int r) {
         HashMap<Integer, BlockingQueue<CoinMsg>> sessionMap;
         BlockingQueue<CoinMsg> roundQueue;
         LOGGER.log(Level.FINEST, "Start pop coin");
@@ -76,7 +75,7 @@ public class BBCCommServer {
 
     }
 
-    public ApproverMsg popApproveMsg(MetaData meta, int r, int stage) {
+    public ApproverMsg popApproveMsg(BBCMetaData meta, int r, int stage) {
         LOGGER.log(Level.FINEST, "Start pop approve");
         HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>> sessionMap;
         HashMap<Integer, BlockingQueue<ApproveMsg>> stageMap;
@@ -140,7 +139,7 @@ public class BBCCommServer {
         }
 
         private void addCoinMsg(CoinMsg request) {
-            MetaData meta = new MetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
+            BBCMetaData meta = new BBCMetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
             int round = request.getHeader().getRound();
             HashMap<Integer, BlockingQueue<CoinMsg>> sessionMap;
             BlockingQueue<CoinMsg> roundQueue;
@@ -164,7 +163,7 @@ public class BBCCommServer {
         }
 
         private void addApproveMsg(ApproveMsg request) {
-            MetaData meta = new MetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
+            BBCMetaData meta = new BBCMetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
 
             if (this.onRcvFirstProtocolMsgCallback != null && request.getHeader().getRound() == 0
                     && request.getStage() == BBCConfig.ApproverStage.FIRST_CALL &&

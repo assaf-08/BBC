@@ -6,7 +6,7 @@ import com.assafmanor.bbc.bbc.BBC;
 import com.assafmanor.bbc.bbc.BBCBuilder;
 import com.assafmanor.bbc.bbc.BBCConfig;
 import com.assafmanor.bbc.bbc.NonBlockingProposeCallback;
-import com.assafmanor.bbc.bbc.MetaData;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.comm.BBCCommImplBuilder;
 import com.assafmanor.bbc.sampler.DummySamplerImpl;
@@ -31,8 +31,8 @@ public class Main {
 //        runApproverTermination();
 //        runRandomApproverTermination();
 //        runPropose();
-//        runProposeTermination();
-        runNonBlockingPropose();
+        runProposeTermination();
+//        runNonBlockingPropose();
 
 
     }
@@ -127,7 +127,7 @@ public class Main {
 
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         for (int i = 0; i < 10000; i++) {
-            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, i, 0, new MetaData(i, i, i));
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, i, 0, new BBCMetaData(i, i, i));
             System.out.println(approveResult.toString() + " Round: " + i);
         }
     }
@@ -150,7 +150,7 @@ public class Main {
         Random rand = new Random();
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         for (int i = 0; i < 10000; i++) {
-            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new MetaData(i, i, i));
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new BBCMetaData(i, i, i));
             System.out.println(approveResult.toString() + " Round: " + i);
         }
     }
@@ -208,7 +208,7 @@ public class Main {
         BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
         int proposal = proposals[nodeID];
         for (int i = 0; i < 100; i++) {
-            int result = bbc.propose(proposal, new MetaData(i, i, i));
+            int result = bbc.propose(proposal, new BBCMetaData(i, i, i));
             System.out.println("BBC Round: " + i + " BBC result: " + result);
         }
 
