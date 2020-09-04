@@ -83,5 +83,8 @@ public class BBC {
         this.bbcCommunicator.shutdownServer();
     }
 
+    public void addNodeToBroadcastList(String host, int port) {
+        this.bbcCommunicator.addNodeToBroadcastList(host, port);
+    }
 
 }
