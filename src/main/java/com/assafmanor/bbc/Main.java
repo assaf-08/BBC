@@ -22,10 +22,12 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
 //        Logger.setLevel(Logger.INFO);
-        System.out.println("D = " + String.valueOf(BBCConfig.D));
-        System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()) + " LAMBDA = " + String.valueOf(BBCConfig.SAMPLE_COMMITTEE_THRESHOLD));
+//        System.out.println("D = " + String.valueOf(BBCConfig.D));
+//        System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()) + " LAMBDA = " + String.valueOf(BBCConfig.SAMPLE_COMMITTEE_THRESHOLD));
 
 //        runCoin();
+//        System.out.println("D = " + String.valueOf(BBCConfig.D));
+//        System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()));
 //        runCoinTermination();
 //        runApprover();
 //        runApproverTermination();
@@ -38,7 +40,9 @@ public class Main {
     }
 
     private static void runCoin() {
-
+        BBCConfig.setNumberOfNodes(3);
+        BBCConfig.setNumberOfByzantineNodes(0);
+        System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()));
         Integer nodeID = TestUtils.getNodeId(true);
 
         System.out.println("Node " + nodeID.toString() + " Has started");
@@ -177,7 +181,7 @@ public class Main {
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
-        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
+        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT, 3, 0).setCommunicator(communicator).build();
         int proposal = proposals[nodeID];
         int result = bbc.propose(proposal, TestUtils.createDummyMeta());
         System.out.println("BBC result: " + result);
@@ -185,7 +189,7 @@ public class Main {
     }
 
     private static void runProposeTermination() {
-        int[] proposals = new int[]{0, 0, 1};
+        int[] proposals = new int[]{1, 1, 1, 0};
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
@@ -198,6 +202,7 @@ public class Main {
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node3", TestUtils.TEST_PORT);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -205,11 +210,20 @@ public class Main {
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
-        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
+        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT, 4, 1).setCommunicator(communicator).build();
         int proposal = proposals[nodeID];
         for (int i = 0; i < 100; i++) {
             int result = bbc.propose(proposal, new BBCMetaData(i, i, i));
+            assert result == 1;
             System.out.println("BBC Round: " + i + " BBC result: " + result);
+            if (i == 50 && nodeID == 2) {
+                return;
+            }
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
     }
@@ -237,7 +251,7 @@ public class Main {
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         SharedCoinContract coin = new WHPCoinImpl(new DummySamplerImpl(), new DummyVRFImpl(), communicator);
-        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT).setCommunicator(communicator).build();
+        BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT, 3, 0).setCommunicator(communicator).build();
         int proposal = proposals[nodeID];
 
 //         bbc.propose(proposal, TestUtils.createDummyMeta());

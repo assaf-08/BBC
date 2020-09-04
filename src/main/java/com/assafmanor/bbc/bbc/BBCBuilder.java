@@ -22,11 +22,15 @@ public class BBCBuilder {
 
     private int nodeID;
 
-    public BBCBuilder(int nodeID, int bbcPort) {
+    public BBCBuilder(int nodeID, int bbcPort, int n, int f) {
         this.nodeID = nodeID;
         this.bbcCommImplBuilder = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(bbcPort).setOnFirstProtocolMsgCallback(null);
         this.vrf = new DummyVRFImpl();
         this.sampler = new DummySamplerImpl();
+
+        // TODO: this is very very bad design because BBCConfig is static and thus shared between all BBC instances.
+        BBCConfig.setNumberOfByzantineNodes(f);
+        BBCConfig.setNumberOfNodes(n);
     }
 
     public BBCBuilder setCommunicator(BBCCommContract communicator) {
@@ -44,7 +48,7 @@ public class BBCBuilder {
         return this;
     }
 
-    public BBCBuilder setOnRcvFirstProtocolMsgCallback(OnRcvFirstProtocolMsgCallback callback){
+    public BBCBuilder setOnRcvFirstProtocolMsgCallback(OnRcvFirstProtocolMsgCallback callback) {
         this.onRcvFirstProtocolMsgCallback = callback;
         this.bbcCommImplBuilder.setOnFirstProtocolMsgCallback(callback);
         return this;

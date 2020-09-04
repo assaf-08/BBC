@@ -14,3 +14,8 @@ services:
     build: .
     environment:
       - node_id=2
+
+  node3:
+    build: .
+    environment:
+      - node_id=3

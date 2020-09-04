@@ -3,8 +3,11 @@ package com.assafmanor.bbc.bbc;
 
 public class BBCConfig {
 
-    public static final int SAMPLE_COMMITTEE_THRESHOLD = 2; // This is lambda
-    public static final double EPSILON = 1.0 / 3.0;
+    private static int f = 0;
+    private static int n = 1;
+
+    public static int SAMPLE_COMMITTEE_THRESHOLD = 2; // This is lambda
+    public static final double EPSILON = 1.0 / 10.0;
     public static final double D = (Math.max((1.0 / SAMPLE_COMMITTEE_THRESHOLD), 0.0362) + ((EPSILON / 3.0) - (float) (1.0 / (3.0 * SAMPLE_COMMITTEE_THRESHOLD)))) / 2.0; // for choosing d between two values.
     public static final int NUMBER_OF_ROUNDS = 50;
 
@@ -30,15 +33,27 @@ public class BBCConfig {
 
     // This is W
     public static int getNumberOfMinCorrectNodesInCommittee() {
-        int min_correct_node = (int) Math.ceil(((2.0 / 3.0) + 3 * D) * SAMPLE_COMMITTEE_THRESHOLD);
-        return min_correct_node;
+        return n - f; // TODO: this is temporary because currently committee is all nodes
+//        int min_correct_node = (int) Math.ceil(((2.0 / 3.0) + 3 * D) * SAMPLE_COMMITTEE_THRESHOLD);
+//        return min_correct_node;
     }
 
     // This is B
     public static int getNumberOfMaxByzantineNodes() {
-        double lambad_coefficient = 1.0 / 3.0 - D;
-        int max_bizantine_node = (int) (lambad_coefficient * SAMPLE_COMMITTEE_THRESHOLD);
-        return max_bizantine_node;
+        return f; // TODO: this is temporary because currently committee is all nodes
+//        double lambad_coefficient = 1.0 / 3.0 - D;
+//        int max_bizantine_node = (int) (lambad_coefficient * SAMPLE_COMMITTEE_THRESHOLD);
+//        return max_bizantine_node;
     }
+
+    public static void setNumberOfByzantineNodes(int numberOfByzantineNodes) {
+        f = numberOfByzantineNodes;
+    }
+
+    public static void setNumberOfNodes(int numberOfNodes) {
+        n = numberOfNodes;
+        SAMPLE_COMMITTEE_THRESHOLD = numberOfNodes; // TODO: this is temporary because currently committee is all nodes
+    }
+
 
 }
