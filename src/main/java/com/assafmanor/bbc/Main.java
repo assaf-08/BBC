@@ -2,11 +2,7 @@ package com.assafmanor.bbc;
 
 import com.assafmanor.bbc.approver.ApproverContract;
 import com.assafmanor.bbc.approver.ApproverImpl;
-import com.assafmanor.bbc.bbc.BBC;
-import com.assafmanor.bbc.bbc.BBCBuilder;
-import com.assafmanor.bbc.bbc.BBCConfig;
-import com.assafmanor.bbc.bbc.NonBlockingProposeCallback;
-import com.assafmanor.bbc.bbc.BBCMetaData;
+import com.assafmanor.bbc.bbc.*;
 import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.comm.BBCCommImplBuilder;
 import com.assafmanor.bbc.sampler.DummySamplerImpl;
@@ -31,9 +27,9 @@ public class Main {
 //        runCoinTermination();
 //        runApprover();
 //        runApproverTermination();
-//        runRandomApproverTermination();
+        runRandomApproverTermination();
 //        runPropose();
-        runProposeTermination();
+//        runProposeTermination();
 //        runNonBlockingPropose();
 
 
@@ -138,6 +134,8 @@ public class Main {
 
     private static void runRandomApproverTermination() {
         Integer nodeID = TestUtils.getNodeId(true);
+        BBCConfig.setNumberOfByzantineNodes(0);
+        BBCConfig.setNumberOfNodes(4);
 
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
@@ -150,6 +148,8 @@ public class Main {
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node3", TestUtils.TEST_PORT);
+
 
         Random rand = new Random();
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
