@@ -3,7 +3,6 @@ package com.assafmanor.bbc.bbc;
 import com.assafmanor.bbc.approver.ApproverContract;
 import com.assafmanor.bbc.approver.ApproverImpl;
 import com.assafmanor.bbc.comm.BBCCommContract;
-import com.assafmanor.bbc.comm.BBCCommImpl;
 import com.assafmanor.bbc.comm.BBCCommImplBuilder;
 import com.assafmanor.bbc.sampler.DummySamplerImpl;
 import com.assafmanor.bbc.sampler.SamplerContract;
@@ -58,6 +57,6 @@ public class BBCBuilder {
         BBCCommContract bbcComm = this.communicator == null ? this.bbcCommImplBuilder.build() : this.communicator;
         SharedCoinContract sharedCoin = new WHPCoinImpl(sampler, vrf, bbcComm);
         ApproverContract approver = new ApproverImpl(sampler, bbcComm, nodeID);
-        return new BBC(approver, sharedCoin);
+        return new BBC(approver, sharedCoin, bbcComm);
     }
 }

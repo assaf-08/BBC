@@ -1,14 +1,12 @@
 package com.assafmanor.bbc.comm;
 
 import com.assafmanor.bbc.approver.ApproverMsg;
+import com.assafmanor.bbc.bbc.BBCMetaData;
 import com.assafmanor.bbc.bbc.OnRcvFirstProtocolMsgCallback;
 import com.assafmanor.bbc.comm.communicationlayer.BBCCommClient;
 import com.assafmanor.bbc.comm.communicationlayer.BBCCommServer;
 import com.assafmanor.bbc.vrf.types.CoinMessage;
 import com.assafmanor.bbc.vrf.types.VRFResult;
-import com.assafmanor.bbc.bbc.BBCMetaData;
-
-import java.io.IOException;
 
 public class BBCCommImpl implements BBCCommContract {
     private final BBCCommClient client;
@@ -48,7 +46,12 @@ public class BBCCommImpl implements BBCCommContract {
     }
 
     @Override
-    public void startServer() throws IOException {
+    public void startServer() {
         this.server.start();
+    }
+
+    @Override
+    public void shutdownServer() {
+        server.shutdown();
     }
 }

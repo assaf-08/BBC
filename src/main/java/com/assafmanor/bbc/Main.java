@@ -11,7 +11,6 @@ import com.assafmanor.bbc.sharedcoin.WHPCoinImpl;
 import com.assafmanor.bbc.test.TestUtils;
 import com.assafmanor.bbc.vrf.DummyVRFImpl;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -27,9 +26,9 @@ public class Main {
 //        runCoinTermination();
 //        runApprover();
 //        runApproverTermination();
-        runRandomApproverTermination();
+//        runRandomApproverTermination();
 //        runPropose();
-//        runProposeTermination();
+        runProposeTermination();
 //        runNonBlockingPropose();
 
 
@@ -43,12 +42,7 @@ public class Main {
 
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
 //        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
@@ -66,12 +60,7 @@ public class Main {
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
 
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
 //        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
@@ -90,12 +79,7 @@ public class Main {
 
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
 //        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
@@ -115,12 +99,7 @@ public class Main {
 
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
@@ -139,12 +118,8 @@ public class Main {
 
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
+
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
@@ -165,12 +140,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
@@ -193,12 +163,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
@@ -235,12 +200,7 @@ public class Main {
         Integer nodeID = TestUtils.getNodeId(true);
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
-        try {
-            communicator.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        communicator.startServer();
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);

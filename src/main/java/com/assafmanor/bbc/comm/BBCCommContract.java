@@ -20,6 +20,8 @@ public interface BBCCommContract {
 
     void addNodeToBroadcastList(String host, int port);
 
-    void startServer() throws IOException;
+    void startServer();
+
+    void shutdownServer();
 
 }

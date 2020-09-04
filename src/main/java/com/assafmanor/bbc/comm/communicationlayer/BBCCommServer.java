@@ -8,11 +8,11 @@ import com.assafmanor.bbc.comm.ApproveMsg;
 import com.assafmanor.bbc.comm.BBCCommGrpc;
 import com.assafmanor.bbc.comm.CoinMsg;
 import com.assafmanor.bbc.comm.Response;
+import com.assafmanor.bbc.vrf.types.CoinMessage;
+import com.assafmanor.bbc.vrf.types.VRFResult;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-import com.assafmanor.bbc.vrf.types.CoinMessage;
-import com.assafmanor.bbc.vrf.types.VRFResult;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -203,8 +203,16 @@ public class BBCCommServer {
 
     }
 
-    public void start() throws IOException {
-        server.start();
+    public void start() {
+        try {
+            server.start();
+        } catch (IOException e) {
+            LOGGER.warning("Error while starting server. " + e.toString());
+        }
+    }
+
+    public void shutdown() {
+        server.shutdown();
     }
 
     public void blockUntilShutdown() throws InterruptedException {

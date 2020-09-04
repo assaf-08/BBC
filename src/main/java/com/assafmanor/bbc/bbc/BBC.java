@@ -1,6 +1,7 @@
 package com.assafmanor.bbc.bbc;
 
 import com.assafmanor.bbc.approver.ApproverContract;
+import com.assafmanor.bbc.comm.BBCCommContract;
 import com.assafmanor.bbc.sharedcoin.SharedCoinContract;
 
 import java.util.Set;
@@ -12,10 +13,12 @@ public class BBC {
 
     private final ApproverContract approver;
     private final SharedCoinContract sharedCoin;
+    private final BBCCommContract bbcCommunicator;
 
-    public BBC(ApproverContract approver, SharedCoinContract sharedCoin) {
+    public BBC(ApproverContract approver, SharedCoinContract sharedCoin, BBCCommContract bbcCommunicator) {
         this.approver = approver;
         this.sharedCoin = sharedCoin;
+        this.bbcCommunicator = bbcCommunicator;
     }
 
 
@@ -60,16 +63,25 @@ public class BBC {
         return decision;
     }
 
-    public void nonBlockingPropose(int v, BBCMetaData meta, NonBlockingProposeCallback callback){
+    public void nonBlockingPropose(int v, BBCMetaData meta, NonBlockingProposeCallback callback) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                int result = propose(v,meta);
+                int result = propose(v, meta);
                 callback.onProposeDone(result);
             }
         });
         thread.start();
 
     }
+
+    public void start() {
+        this.bbcCommunicator.startServer();
+    }
+
+    public void shutdown() {
+        this.bbcCommunicator.shutdownServer();
+    }
+
 
 }
