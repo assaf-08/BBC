@@ -24,8 +24,8 @@ public class Main {
 //        System.out.println("D = " + String.valueOf(BBCConfig.D));
 //        System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()));
 //        runCoinTermination();
-//        runApprover();
-        runApproverTermination();
+        runApprover();
+//        runApproverTermination();
 //        runRandomApproverTermination();
 //        runPropose();
 //        runProposeTermination();
@@ -77,19 +77,30 @@ public class Main {
     private static void runApprover() {
         Integer nodeID = TestUtils.getNodeId(true);
 
+        BBCConfig.setNumberOfByzantineNodes(0);
+        BBCConfig.setNumberOfNodes(4);
+
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         communicator.startServer();
-//        communicator.addNodeToBroadcastList(nodeID == 0 ? "node1" : "node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node3", TestUtils.TEST_PORT);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
+        if (nodeID == 0){
+            try {
+                System.out.println("Sleeping...");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, 0, 0, TestUtils.createDummyMeta());
         System.out.println(approveResult.toString());
     }
