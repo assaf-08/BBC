@@ -25,10 +25,10 @@ public class Main {
 //        System.out.println("W = " + String.valueOf(BBCConfig.getNumberOfMinCorrectNodesInCommittee()) + " B = " + String.valueOf(BBCConfig.getNumberOfMaxByzantineNodes()));
 //        runCoinTermination();
 //        runApprover();
-//        runApproverTermination();
+        runApproverTermination();
 //        runRandomApproverTermination();
 //        runPropose();
-        runProposeTermination();
+//        runProposeTermination();
 //        runNonBlockingPropose();
 
 
@@ -96,19 +96,22 @@ public class Main {
 
     private static void runApproverTermination() {
         Integer nodeID = TestUtils.getNodeId(true);
-
+        BBCConfig.setNumberOfByzantineNodes(0);
+        BBCConfig.setNumberOfNodes(4);
         System.out.println("Node " + nodeID.toString() + " Has started");
         BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
         communicator.startServer();
         communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
         communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node3", TestUtils.TEST_PORT);
 
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         for (int i = 0; i < 10000; i++) {
-            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(0, i, 0, new BBCMetaData(i, i, i));
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(1, i, 0, new BBCMetaData(0, i, 0));
             System.out.println(approveResult.toString() + " Round: " + i);
         }
+        communicator.shutdownServer();
     }
 
     private static void runRandomApproverTermination() {
@@ -134,6 +137,28 @@ public class Main {
         }
     }
 
+    private static void runRandomApproverTermination0() {
+        Integer nodeID = TestUtils.getNodeId(true);
+        BBCConfig.setNumberOfByzantineNodes(0);
+        BBCConfig.setNumberOfNodes(4);
+
+        System.out.println("Node " + nodeID.toString() + " Has started");
+        BBCCommContract communicator = new BBCCommImplBuilder().setNodeID(nodeID).setServerPort(TestUtils.TEST_PORT).build();
+        communicator.startServer();
+
+        communicator.addNodeToBroadcastList("node0", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node1", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node2", TestUtils.TEST_PORT);
+        communicator.addNodeToBroadcastList("node3", TestUtils.TEST_PORT);
+
+
+        Random rand = new Random();
+        ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
+        for (int i = 0; i < 10000; i++) {
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new BBCMetaData(i, i, i));
+            System.out.println(approveResult.toString() + " Round: " + i);
+        }
+    }
 
     private static void runPropose() {
         int[] proposals = new int[]{0, 0, 1};

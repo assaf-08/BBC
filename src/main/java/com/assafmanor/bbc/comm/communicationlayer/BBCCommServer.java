@@ -139,7 +139,7 @@ public class BBCCommServer {
         }
 
         private void addCoinMsg(CoinMsg request) {
-            BBCMetaData meta = new BBCMetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
+            BBCMetaData meta = new BBCMetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCidSeries());
             int round = request.getHeader().getRound();
             HashMap<Integer, BlockingQueue<CoinMsg>> sessionMap;
             BlockingQueue<CoinMsg> roundQueue;
@@ -163,7 +163,7 @@ public class BBCCommServer {
         }
 
         private void addApproveMsg(ApproveMsg request) {
-            BBCMetaData meta = new BBCMetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCid());
+            BBCMetaData meta = new BBCMetaData(request.getHeader().getMeta().getChannel(), request.getHeader().getMeta().getCid(), request.getHeader().getMeta().getCidSeries());
 
             if (this.onRcvFirstProtocolMsgCallback != null && request.getHeader().getRound() == 0
                     && request.getStage() == BBCConfig.ApproverStage.FIRST_CALL &&
