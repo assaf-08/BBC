@@ -76,7 +76,7 @@ public class BBCCommServer {
     }
 
     public ApproverMsg popApproveMsg(BBCMetaData meta, int r, int stage) {
-        LOGGER.log(Level.FINEST, "Start pop approve");
+        LOGGER.log(Level.FINEST, "Start pop approve round "+r+" Meta Channel "+ meta.getChannel()+" Cid "+meta.getCid()+" CidSeries "+meta.getCidSeries());
         HashMap<Integer, HashMap<Integer, BlockingQueue<ApproveMsg>>> sessionMap;
         HashMap<Integer, BlockingQueue<ApproveMsg>> stageMap;
         BlockingQueue<ApproveMsg> msgQueue;
