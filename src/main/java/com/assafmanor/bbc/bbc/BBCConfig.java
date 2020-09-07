@@ -9,7 +9,7 @@ public class BBCConfig {
     public static int SAMPLE_COMMITTEE_THRESHOLD = 2; // This is lambda
     public static final double EPSILON = 1.0 / 10.0;
     public static final double D = (Math.max((1.0 / SAMPLE_COMMITTEE_THRESHOLD), 0.0362) + ((EPSILON / 3.0) - (float) (1.0 / (3.0 * SAMPLE_COMMITTEE_THRESHOLD)))) / 2.0; // for choosing d between two values.
-    public static final int NUMBER_OF_ROUNDS = 50;
+    public static int NUMBER_OF_ROUNDS = 50;
 
     public static final int VRF_STRING_OUTPUT_BASE = 10;
 
@@ -55,5 +55,7 @@ public class BBCConfig {
         SAMPLE_COMMITTEE_THRESHOLD = numberOfNodes; // TODO: this is temporary because currently committee is all nodes
     }
 
-
+    public static void setNumberOfRounds(int rounds) {
+        NUMBER_OF_ROUNDS = rounds;
+    }
 }
