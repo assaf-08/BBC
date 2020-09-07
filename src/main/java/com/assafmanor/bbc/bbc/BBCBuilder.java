@@ -35,6 +35,7 @@ public class BBCBuilder {
     public BBCBuilder setNumberOfRounds(int rounds) {
         // TODO: this is very very bad design because BBCConfig is static and thus shared between all BBC instances.
         BBCConfig.setNumberOfRounds(rounds);
+        return this;
     }
 
     public BBCBuilder setCommunicator(BBCCommContract communicator) {
