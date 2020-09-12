@@ -6,11 +6,13 @@ public class BBCMetaData {
     private final int channel;
     private final int cid;
     private final int cidSeries;
+    private final int height; // Currently intentionally not part of the hash.
 
-    public BBCMetaData(int channel, int cid, int cidSeries) {
+    public BBCMetaData(int channel, int cid, int cidSeries, int height) {
         this.channel = channel;
         this.cid = cid;
         this.cidSeries = cidSeries;
+        this.height = height;
     }
 
     public int getChannel() {
@@ -23,6 +25,10 @@ public class BBCMetaData {
 
     public int getCidSeries() {
         return cidSeries;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     @Override

@@ -108,7 +108,7 @@ public class Main {
 
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         for (int i = 0; i < 10000; i++) {
-            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(1, i, 0, new BBCMetaData(0, i, 0));
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(1, i, 0, new BBCMetaData(0, i, 0,0));
             System.out.println(approveResult.toString() + " Round: " + i);
         }
         communicator.shutdownServer();
@@ -132,7 +132,7 @@ public class Main {
         Random rand = new Random();
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         for (int i = 0; i < 10000; i++) {
-            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new BBCMetaData(i, i, i));
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new BBCMetaData(i, i, i,i));
             System.out.println(approveResult.toString() + " Round: " + i);
         }
     }
@@ -155,7 +155,7 @@ public class Main {
         Random rand = new Random();
         ApproverContract approver = new ApproverImpl(new DummySamplerImpl(), communicator, nodeID);
         for (int i = 0; i < 10000; i++) {
-            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new BBCMetaData(i, i, i));
+            HashSet<Integer> approveResult = (HashSet<Integer>) approver.approve(rand.nextInt(3), i, 0, new BBCMetaData(i, i, i,i));
             System.out.println(approveResult.toString() + " Round: " + i);
         }
     }
@@ -203,7 +203,7 @@ public class Main {
         BBC bbc = new BBCBuilder(nodeID, TestUtils.TEST_PORT, 4, 1).setCommunicator(communicator).build();
         int proposal = proposals[nodeID];
         for (int i = 0; i < 100; i++) {
-            int result = bbc.propose(proposal, new BBCMetaData(i, i, i));
+            int result = bbc.propose(proposal, new BBCMetaData(i, i, i,i));
             assert result == 1;
             System.out.println("BBC Round: " + i + " BBC result: " + result);
             if (i == 50 && nodeID == 2) {

@@ -25,6 +25,6 @@ public class TestUtils {
     }
 
     public static BBCMetaData createDummyMeta(){
-        return new BBCMetaData(0,0,0);
+        return new BBCMetaData(0,0,0,0);
     }
 }

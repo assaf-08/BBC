@@ -51,9 +51,8 @@ public class BBCCommClient {
     }
 
     private MsgHeader createMsgHeader(BBCMetaData meta, int round) {
-        //TODO add height to header.
         Meta rawMeta = Meta.newBuilder().setChannel(meta.getChannel()).setCid(meta.getCid()).setCidSeries(meta.getCidSeries()).build();
-        MsgHeader msgHeader = MsgHeader.newBuilder().setSenderId(this.id).setMeta(rawMeta).setRound(round).build();
+        MsgHeader msgHeader = MsgHeader.newBuilder().setSenderId(this.id).setMeta(rawMeta).setRound(round).setHeight(meta.getHeight()).build();
         return msgHeader;
     }
 }
